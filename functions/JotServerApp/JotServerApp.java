@@ -14,6 +14,8 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 	@Override
     public void runner(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
+			
+			String method = request.getMethod();
 			LOGGER.log(Level.SEVERE,"Jots Request Recived");
 			switch(request.getRequestURI()) {
 				case "/jots/test": {
@@ -28,6 +30,46 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 					response.setStatus(200);
 					response.getWriter().write(responseData.toString());
 					break;	
+				}
+				case "/jots": {
+					LOGGER.log(Level.SEVERE,"Jots Request routed to /jots");
+
+					switch (method) {
+						case "GET":{
+							LOGGER.log(Level.SEVERE,"Jots GET request");
+						
+							break;
+						}
+						case "POST":{
+							LOGGER.log(Level.SEVERE,"Jots POST request");
+						
+							break;
+						}
+						case "UPDATE":{
+							LOGGER.log(Level.SEVERE,"Jots UPDATE request");
+						
+							break;
+						}
+						case "DELETE":{
+							LOGGER.log(Level.SEVERE,"Jots DELETE request");
+						
+							break;
+						}
+						default:{
+							LOGGER.log(Level.SEVERE,"Jots UNKNOWN request");
+							responseData.put("data", new JSONObject() {
+								{
+									put("error_title","invalid request method");
+									put("error_message", "You seem to have used invalid method, use only GET/POST/UPDATE/DELETE");
+								}
+							});
+							response.setContentType("application/json");
+							response.setStatus(200);
+							response.getWriter().write(responseData.toString());
+							break;
+						}
+					}	
+					break;
 				}
 				default: {
 					LOGGER.log(Level.SEVERE,"Jots Request routed to Default as invalid URL");
