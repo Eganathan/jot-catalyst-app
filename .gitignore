@@ -2,4 +2,5 @@
 *.class
 
 # Ignore the .output directory
+functions/JotServerApp/.output/
 .output/
