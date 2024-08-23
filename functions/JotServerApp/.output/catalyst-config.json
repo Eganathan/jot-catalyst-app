@@ -1,0 +1,11 @@
+{
+	"deployment": {
+		"name": "JotServerApp",
+		"stack": "java17",
+		"type": "advancedio",
+		"env_variables": {}
+	},
+	"execution": {
+		"main": "JotServerApp"
+	}
+}

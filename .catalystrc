@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "11585000000037001",
+      "name": "JOT",
+      "domain": {
+        "id": "10068768328",
+        "name": "jot-778776887.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "778776887",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}

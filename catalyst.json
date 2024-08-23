@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "targets": [
+      "JotServerApp"
+    ],
+    "ignore": [
+      ".output"
+    ],
+    "source": "functions"
+  },
+  "client": {
+    "source": "client"
+  },
+  "appsail": [
+    {
+      "source": "/Users/eganathan-14461/eknath/server/jot",
+      "name": "AppSail"
+    }
+  ]
+}

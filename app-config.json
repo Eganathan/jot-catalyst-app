@@ -1,0 +1,9 @@
+{
+	"command": "echo Please specify the start-up command in the app-config.json file under the key command",
+	"build_path": "/Users/eganathan-14461/eknath/server/jot",
+	"stack": "java17",
+	"env_variables": {},
+	"memory": 256,
+	"scripts": {},
+	"platform": "javase"
+}
