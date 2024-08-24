@@ -1,14 +1,20 @@
 import java.util.logging.Logger;
-import java.io.IOException;
+
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
+// import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.catalyst.advanced.CatalystAdvancedIOHandler;
+import com.zc.component.object.ZCObject;
+import com.zc.component.object.ZCRowObject;
 
 public class JotServerApp implements CatalystAdvancedIOHandler {
 	private static final Logger LOGGER = Logger.getLogger(JotServerApp.class.getName());
@@ -81,13 +87,74 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public void createKeepNote(HttpServletRequest request, HttpServletResponse response){
 		LOGGER.log(Level.INFO,"Inside Jot Creation Block");
 			try {
+
+				// JSONParser jsonParser = new JSONParser();
+	 			// ServletInputStream requestBody = request.getInputStream();
+	 
+	 			// JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(requestBody, "UTF-8"));
+	 
+	 			// String notes = jsonObject.get("notes").toString();
+	 
+	 			// ZCRowObject row = ZCRowObject.getInstance();
+	 			// row.set("Notes", notes);
+	 
+	 			// ZCRowObject todoItem = ZCObject.getInstance().getTable("TodoItems").insertRow(row);
+	 
+	 			// response.setStatus(200);
+	 			// responseData.put("status", "success");
+	 			// responseData.put("data", new JSONObject() {
+	 			// 	{
+	 			// 		put("todoItem", new JSONObject() {
+	 			// 			{
+	 			// 				put("id", todoItem.get("ROWID").toString());
+	 			// 				put("notes", todoItem.get("Notes").toString());
+	 			// 			}
+	 			// 		});
+	 
+	 			// 	}
+	 			// });
+
+
+				 LOGGER.log(Level.INFO,"Jot creation payload recived 0 "+request.toString());
+
+				JSONParser jsonParser = new JSONParser();
+	 			ServletInputStream requestBody = request.getInputStream();
+	 			JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(requestBody, "UTF-8"));
+				JSONObject jot =  (JSONObject) jsonObject.get("jot");
+				LOGGER.log(Level.INFO,"Jot creation payload recived 2"+jot.toString());
+
+				ZCRowObject row = ZCRowObject.getInstance();
+	 			row.set("title",jot.get("title"));
+				row.set("message",jot.get("message"));
+
+				ZCRowObject jotItem = ZCObject.getInstance().getTable("notes").insertRow(row);
 				
+	
+	 			responseData.put("status", "success");
+	 			responseData.put("data", new JSONObject() {
+	 				{
+	 					put("jot", new JSONObject() {
+	 						{
+								put("id",jotItem.get("ROWID").toString());
+									put("title",jotItem.get("title").toString());
+									put("note",jotItem.get("message").toString());
+									put("created_time",jotItem.get("CREATEDTIME").toString());
+									put("modified_time",jotItem.get("MODIFIEDTIME").toString());
+	 						}
+	 					});
+	 
+	 				}
+	 			});
+				 response.setContentType("application/json");
+				 response.setStatus(201);
+				 response.getWriter().write(responseData.toJSONString());
 			} catch (Exception e) {
 				LOGGER.log(Level.SEVERE,"Exception in JotServerApp",e);
-				errorMessage(response, e,"Unable to create Jot","Creation of Jot Failed due to an exception", 500);
+				errorMessage(response, e,"Unable to create Jot","Creation of Jot Failed due to an exception"+e.getLocalizedMessage(), 500);
 			}
 	}
 
@@ -105,7 +172,7 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 		LOGGER.log(Level.SEVERE,"Exception in JotServerApp",e);
 		response.setContentType("application/json");
 		response.setStatus(errorCode);
-		response.getWriter().write(responseData.toString());
+		response.getWriter().write(responseData.toJSONString());
 	}catch(Throwable t){
 		LOGGER.log(Level.SEVERE,"Exception throwing error in JotServerApp",e);
 	}
