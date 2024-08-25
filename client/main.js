@@ -58,6 +58,7 @@ function postLoginLogic(){
 
         // GET Request
         getBulkJots()
+        
         });
 }
 

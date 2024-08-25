@@ -1,120 +1,183 @@
+/* General Styles */
 body {
-    font-family: sans-serif;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-    margin: 0; 
+  font-family: 'Arial', sans-serif; /* Choose a modern font */
+  min-height: 100vh;
+  background-color: #f4f4f4; /* Light gray background */
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Arrange elements vertically */
+  align-items: center; 
 }
 
-.container {
-    margin-top: 60px;
-    background-color: #fff;
-    padding: 20px; /* Adjust padding for smaller screens */
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 90%; /* Limit container width on larger screens */
-    width: 400px; /* Set a comfortable width for most screens */
+/* Topbar Styles */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: #333; /* Dark background for contrast */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-@media (max-width: 500px) {
-    .container {
-        width: 90%; /* Take up most of the screen on small devices */
-        padding: 15px; /* Further reduce padding on very small screens */
-    }
-
-    input[type="text"], textarea {
-        font-size: 14px; /* Slightly smaller font on small screens */
-    }
-}
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"], textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in the total width */
-  }
-  
-  textarea {
-    height: 100px;
-    resize: vertical; /* Allow vertical resizing only */
-  }
-  
-  button {
-    background-color: #007bff; /* Blue */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  button:disabled {
-    background-color: #ccc; /* Grayed out when disabled */
-    cursor: not-allowed;
-  }  
-
-  /*TopBar*/
-  .topbar {
-    position: sticky; /* Make the topbar sticky */
-    top: 0; /* Stick it to the top of the viewport */
-    z-index: 1; /* Ensure it's above other content */
-    display: flex; /* Use flexbox for easy alignment */
-    justify-content: space-between; /* Distribute items evenly */
-    align-items: center; /* Vertically center items */
-    padding: 10px 20px; /* Add some padding */
-    background-color: #f0f0f0; /* Example background color */
+.topbar h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 .topbar nav ul {
-    list-style: none; /* Remove bullet points */
-    margin: 0;
-    padding: 0;
-    display: flex; /* Make the list items display horizontally */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
 .topbar nav li {
-    margin-left: 20px; /* Add space between list items */
+  margin-left: 30px;
 }
 
 .topbar nav a {
-    text-decoration: none; /* Remove underlines from links */
-    color: #333; /* Example link color */
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s; /* Smooth color transition on hover */
 }
 
-/* Style the logout button as needed */
+.topbar nav a:hover {
+  color: #ddd; /* Lighter color on hover */
+}
+
 .topbar #logoutButton {
-    padding: 5px 10px;
-    background-color: #dc3545; /* Example red background */
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+  padding: 8px 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s; /* Smooth background transition on hover */
 }
-/* end of TOPBar Style*/
+
+.topbar #logoutButton:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Container Styles */
+.container {
+  margin-top: 80px; /* Adjust as needed */
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Adjust for your desired width */
+  width: 90%;
+}
+
+.container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+ #jot-description {height: 3rem; /* Set an initial smaller height */
+  transition: height 0.3s ease; /* Add a smooth transition for height change */
+}
 
 
-/*Items*/
+/* Jot Display Styles */
 #jotDisplay {
-    /* Add your desired styling here */
+  margin-top: 40px;
+  width: 90%;
+  max-width: 600px;
+}
+
+#jotDisplay h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#jotList {
+  padding: 0;
 }
 
 #jotList li {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    list-style: none; /* Remove bullet points */
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 15px;
+  list-style: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#jotList h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+#jotList p {
+  margin: 5px 0;
+}
+
+#errorContainer {
+  display: none;
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Media Queries for Responsiveness (adjust breakpoints as needed) */
+@media (max-width: 768px) {
+  .container, #jotDisplay {
+    max-width: 95%;
+  }
 }
