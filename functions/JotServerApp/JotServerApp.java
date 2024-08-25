@@ -136,11 +136,18 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 		LOGGER.log(Level.INFO,"Inside GET BULK JOTS Block");
 			try {
 
+				Integer totalEntries = Integer.parseInt(ZCQL.getInstance().executeQuery("SELECT COUNT(ROWID) FROM notes").get(0).get("notes", "ROWID").toString());
+
+				if(totalEntries <= 0){
+				errorMessage(response, null, "Empty Comntent", "There are no Jots available,start creating jots", 204);
+				return;
+			}
+				
+
 				Integer page = Integer.parseInt(request.getParameter("page"));
 	 			Integer perPage = Integer.parseInt(request.getParameter("per_page"));
+				Boolean hasMore = totalEntries > page * perPage;
 
-				Integer totalEntries = Integer.parseInt(ZCQL.getInstance().executeQuery("SELECT COUNT(ROWID) FROM notes").get(0).get("notes", "ROWID").toString());
-	 			Boolean hasMore = totalEntries > page * perPage;
 
 				LOGGER.log(Level.INFO,"Inside GET BULK: request: page"+page+" per_page="+perPage+" availableEntries="+totalEntries+"hasMore="+hasMore);
 
