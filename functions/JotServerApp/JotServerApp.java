@@ -1,8 +1,10 @@
 import java.util.logging.Logger;
 
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -18,6 +20,7 @@ import com.catalyst.advanced.CatalystAdvancedIOHandler;
 import com.zc.component.object.ZCObject;
 import com.zc.component.object.ZCRowObject;
 import com.zc.component.zcql.ZCQL;
+
 
 public class JotServerApp implements CatalystAdvancedIOHandler {
 	private static final Logger LOGGER = Logger.getLogger(JotServerApp.class.getName());
@@ -57,19 +60,19 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 							createKeepNote(request,response);
 							break;
 						}
-						case "UPDATE":{
-							LOGGER.log(Level.INFO,"Jots UPDATE request");
-						
+						case "PUT":{
+							LOGGER.log(Level.INFO,"Jots PUT request");
+							updateJotNote(request,response);
 							break;
 						}
 						case "DELETE":{
 							LOGGER.log(Level.INFO,"Jots DELETE request");
-						
+							deleteJotItem(request,response);
 							break;
 						}
 						default:{
 							LOGGER.log(Level.INFO,"Jots UNKNOWN request");
-							errorMessage(response,null, "invalid request method","You seem to have used invalid method,we only support GET/POST/UPDATE/DELETE", 404);
+							errorMessage(response,null, "invalid request method","You seem to have used invalid method,we only support GET/POST/PUT/DELETE", 404);
 							break;
 						}
 					}	
@@ -162,7 +165,7 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 									put("created_time", row.get("notes", "CREATEDTIME").toString());
 									put("modified_time", row.get("notes", "MODIFIEDTIME").toString());
 	 								put("title", row.get("notes", "title").toString());
-									put("description", row.get("notes", "message").toString());
+									put("note", row.get("notes", "message").toString());
 	 							}
 	 						});
 	 					});
@@ -186,6 +189,89 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 			}
 	}
 
+
+	@SuppressWarnings("unchecked")
+	public void updateJotNote(HttpServletRequest request, HttpServletResponse response){
+		LOGGER.log(Level.INFO,"Inside Jot Update Block");
+			try {
+
+				JSONParser jsonParser = new JSONParser();
+	 			ServletInputStream requestBody = request.getInputStream();
+	 			JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(requestBody, "UTF-8"));
+				JSONObject jot =  (JSONObject) jsonObject.get("jot");
+
+				Long jotId = Long.parseLong(jot.get("id").toString());
+
+				List<ZCRowObject>  rows = new ArrayList<ZCRowObject>(); 
+				
+				ZCRowObject row = ZCRowObject.getInstance();
+				// row.setRowObject(jot);
+				// row.setRowObject(new JSONObject(){
+				// 	{
+				// 	put("ROWID",jot.get("id"));
+				// 	put("title",jot.get("title"));
+				// 	put("message",jot.get("message"));
+				// 	}
+				// });
+
+				row.set("ROWID",jot.get("id"));
+	 			row.set("title",jot.get("title"));
+				row.set("message",jot.get("note"));
+
+				rows.add(row);
+
+				ZCObject.getInstance().getTable("notes").updateRows(rows);
+				ZCRowObject jotItem = ZCObject.getInstance().getTable("notes").getRow(jotId);
+	
+	 			responseData.put("status", "success");
+	 			responseData.put("data", new JSONObject() {
+	 				{
+	 					put("jot", new JSONObject() {
+	 						{
+								put("id",jotItem.get("ROWID").toString());
+									put("title",jotItem.get("title").toString());
+									put("note",jotItem.get("message").toString());
+									put("created_time",jotItem.get("CREATEDTIME").toString());
+									put("modified_time",jotItem.get("MODIFIEDTIME").toString());
+	 						}
+	 					});
+	 
+	 				}
+	 			});
+				 response.setContentType("application/json");
+				 response.setStatus(202);
+				 response.getWriter().write(responseData.toJSONString());
+			} catch (Exception e) {
+				LOGGER.log(Level.SEVERE,"Exception in JotServerApp",e);
+				errorMessage(response, e,"Unable to update Jot","Updation of Jot Failed due to an exception"+e.getLocalizedMessage(), 500);
+			}
+	}
+
+
+
+	public void deleteJotItem(HttpServletRequest request, HttpServletResponse response){
+		try{
+			 Long jotIdForDeletion = Long.parseLong(request.getParameter("id"));
+			 ZCObject.getInstance().getTable("notes").deleteRow(jotIdForDeletion);
+			
+			 responseData.put("status", "success");
+
+			 responseData.put("data", new JSONObject() {
+				{
+				put("title","Jot Deleted Successfully");
+				put("message", "Jot Deleted Successfully");
+			}
+			});
+
+			response.setContentType("application/json");
+			response.setStatus(200);
+			response.getWriter().write(responseData.toJSONString());
+		}catch(Exception e){
+			errorMessage(response, e, "Deletion Failed", "The Jot deletion failed please check your input", 500);
+		}
+	}
+
+
 	private void errorMessage(HttpServletResponse response, Exception e, String errorTitle, String errorMessage, int errorCode) {
 		try{
 		responseData.put("data", new JSONObject() {
@@ -204,5 +290,4 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 		LOGGER.log(Level.SEVERE,"Exception throwing error in JotServerApp",e);
 	}
 	}
-
 }
