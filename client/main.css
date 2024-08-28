@@ -181,3 +181,22 @@ button:disabled {
     max-width: 95%;
   }
 }
+
+.jot-item .jot-tags {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: space-around;
+}
+
+.jot-actions{
+  grid-template-columns: repeat(auto-fill, 1fr);
+ }
+
+.jot-actions button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline;
+}

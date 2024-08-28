@@ -1,18 +1,17 @@
 const loginURL = "https://jot-778776887.development.catalystserverless.com/__catalyst/auth/login";
 const isLoggedIn = 
-    document.cookie.includes('_iamadt_client_10068768328') || 
-    document.cookie.includes('_iambdt_client_10068768328') || 
+    document.cookie.includes('_iamadt_client') || 
     document.cookie.includes('_z_identity') || 
     document.cookie.includes('iamcsr');
 
 
-if (isLoggedIn) {
+// if (isLoggedIn) {
     console.log('User is authenticated, access granted');
     postLoginLogic();
-} else {
-    window.location.href = loginURL;
-    console.log('Not logged in, redirecting to login');
-}
+// } else {
+//     window.location.href = loginURL;
+//     console.log('Not logged in, redirecting to login');
+// }
 
 
 function postLoginLogic(){
@@ -90,12 +89,49 @@ function displayJots(jots) {
 
     jots.forEach(jot => {
         const listItem = document.createElement('li');
+        listItem.classList.add('jot-item'); // Add a class for styling and event handling
+
+        // Format the last modified date according to your requirements
+        const formattedModifiedTime = formatDateTime(jot.modified_time);
+
         listItem.innerHTML = `
             <h3>${jot.title}</h3>
             <p>${jot.description}</p>
-            <p>Created: ${jot.created_time}</p>
-            <p>Modified: ${jot.modified_time}</p>
+            
+            <p class="last-modified">Last Modified: ${formattedModifiedTime}</p>
+            
+            <div class="jot-actions" style="display: none;"> 
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+                <button class="share-button">Share</button>
+            </div>
         `;
+
+        // Add event listeners to show/hide buttons on hover/focus
+        listItem.addEventListener('mouseenter', () => {
+            listItem.querySelector('.jot-actions').style.display = 'grid';
+        });
+        listItem.addEventListener('mouseleave', () => {
+            listItem.querySelector('.jot-actions').style.display = 'none';
+        });
+        listItem.addEventListener('focusin', () => { // For keyboard focus
+            listItem.querySelector('.jot-actions').style.display = 'grid';
+        });
+        listItem.addEventListener('focusout', () => {
+            listItem.querySelector('.jot-actions').style.display = 'none';
+        });
+
+        // Add event listeners to the buttons (you'll need to implement the actual functionality)
+        listItem.querySelector('.edit-button').addEventListener('click', () => {
+           editJot(jot);
+        });
+        listItem.querySelector('.delete-button').addEventListener('click', () => {
+            deleteJot(jot);
+        });
+        listItem.querySelector('.share-button').addEventListener('click', () => {
+            shareJot(jot);
+        });
+
         jotList.appendChild(listItem);
     });
 }
@@ -104,5 +140,41 @@ function displayError(message) {
     const errorContainer = document.getElementById('errorContainer'); 
     errorContainer.textContent = message;
     errorContainer.style.display = 'block';
+}
+
+function editJot(jot){
+    console.log("EDIT ==> "+jot.id)
+  }
+
+  function deleteJot(jot){
+    console.log("DELETE ==> "+jot.id)
+  }
+
+function shareJot(jot){
+    console.log("SHARE ==> "+jot.id)
+}
+
+
+function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+  
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+    const year = date.getFullYear();   
+  
+    const hours = date.getHours() % 12 || 12; // Convert to 12-hour format
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const amPm = date.getHours() >= 12   ? 'pm' : 'am';
+  
+    if (date.toDateString() === today.toDateString()) {
+      return `Today at ${hours}:${minutes} ${amPm}`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Yesterday at ${hours}:${minutes} ${amPm}`;
+    } else {
+      return `${day} ${month}, ${year} at ${hours}:${minutes} ${amPm}`;
+    }
 }
 
