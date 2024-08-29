@@ -1,5 +1,6 @@
 import java.util.logging.Logger;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 			
 			String method = request.getMethod();
 			LOGGER.log(Level.INFO,"Jots Request Recived");
+
+			Pattern jotPattern = Pattern.compile("^jots/\\d{15}$");
+			Matcher matcher = jotPattern.matcher(request.getRequestURI());
+
 			switch(request.getRequestURI()) {
 				case "/jots/test": {
 					LOGGER.log(Level.INFO,"Jots Request routed to /jots");
@@ -51,7 +56,6 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 
 					switch (method) {
 						case "GET":{
-							LOGGER.log(Level.INFO,"Jots GET request");
 							getBulkKeeps(request, response);
 						break;
 						}
@@ -79,11 +83,15 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 					break;
 				}
 				default: {
+					if(matcher.matches()){
+						getJotNote(request, response);
+					}else{
 					LOGGER.log(Level.SEVERE,"Jots Request routed to Default as invalid URL");
 					response.setContentType("application/json");
 					response.setStatus(404);
 					response.getWriter().write(responseData.toString());
 					errorMessage(response,null, "invalud URL requested","You seem to have entered invalid url please try again with valid url", 404);
+					}
 				}
 			}
 		}
@@ -244,6 +252,38 @@ public class JotServerApp implements CatalystAdvancedIOHandler {
 			} catch (Exception e) {
 				LOGGER.log(Level.SEVERE,"Exception in JotServerApp",e);
 				errorMessage(response, e,"Unable to update Jot","Updation of Jot Failed due to an exception"+e.getLocalizedMessage(), 500);
+			}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void getJotNote(HttpServletRequest request, HttpServletResponse response){
+		LOGGER.log(Level.INFO,"Inside Jot Update Block");
+			try {
+
+				Long jotId = Long.parseLong(request.getParameter("id"));
+				ZCRowObject jotItem = ZCObject.getInstance().getTable("notes").getRow(jotId);
+	
+	 			responseData.put("status", "success");
+	 			responseData.put("data", new JSONObject() {
+	 				{
+	 					put("jot", new JSONObject() {
+	 						{
+								put("id",jotItem.get("ROWID").toString());
+									put("title",jotItem.get("title").toString());
+									put("note",jotItem.get("message").toString());
+									put("created_time",jotItem.get("CREATEDTIME").toString());
+									put("modified_time",jotItem.get("MODIFIEDTIME").toString());
+	 						}
+	 					});
+	 
+	 				}
+	 			});
+				 response.setContentType("application/json");
+				 response.setStatus(200);
+				 response.getWriter().write(responseData.toJSONString());
+			} catch (Exception e) {
+				LOGGER.log(Level.SEVERE,"Exception in JotServerApp",e);
+				errorMessage(response, e,"Unable to GET Jot","GET Jot Failed due to an exception"+e.getLocalizedMessage(), 500);
 			}
 	}
 

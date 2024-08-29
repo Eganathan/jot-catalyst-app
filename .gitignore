@@ -4,3 +4,6 @@
 # Ignore the .output directory
 functions/JotServerApp/.output/
 .output/
+JotServerApp/.output/
+functions/JotServerApp/.output/
+functions/.idea/
