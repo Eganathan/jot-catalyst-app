@@ -1,15 +1,15 @@
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.function.Supplier;
 
-public class JotServices implements Runner<JotServices> {
+public class JotBulkServices extends BulkBaseService<JotBulkServices> {
 
     private HttpServletRequest _request;
     private HttpServletResponse _response;
 
 
     @Override
-    public JotServices create(HttpServletRequest request, HttpServletResponse response) {
+    public JotBulkServices create(HttpServletRequest request, HttpServletResponse response) {
         _request = request;
         _response = response;
         return this;
@@ -17,7 +17,6 @@ public class JotServices implements Runner<JotServices> {
 
     @Override
     public void process() {
-
     }
 }
 
