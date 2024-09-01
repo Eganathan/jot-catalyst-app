@@ -34,10 +34,8 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
 
         switch (method) {
             case GET -> getSingleJot();
-            case PUT -> {
-            }
-            case DELETE -> {
-            }
+            case PUT -> updateJot();
+            case DELETE -> deleteJotItem();
             default -> {
                 // public void initiateErrorMessage(HttpServletResponse response, Integer responseCode, String errorTitle, String errorMessage)
                 initiateErrorMessage(_response, 500, "invalid Method", "Invalid Method");
@@ -45,6 +43,9 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
         }
     }
 
+
+
+    //Implementations
 
     private void getSingleJot() throws IOException {
         try {
@@ -110,6 +111,23 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
             initiateSuccessMessage(_response, 200, updatedJot);
         } catch (Exception e) {
             initiateErrorMessage(_response, 500, "Unable to update Jot", "Updation failed due to an exception" + e.getLocalizedMessage());
+        }
+    }
+
+
+    public void deleteJotItem() throws IOException {
+        try {
+            Long jotIdForDeletion = extractID(_request.getRequestURI());
+            ZCObject.getInstance().getTable("notes").deleteRow(jotIdForDeletion);
+
+            JSONObject deletedMessage = new JSONObject() {
+                {
+                    put("message", "deleted successfully");
+                }
+            };
+            initiateSuccessMessage(_response, 200, deletedMessage);
+        } catch (Exception e) {
+            initiateErrorMessage(_response, 500, "Unable to delete Jot", "Deletion failed due to an exception" + e.getLocalizedMessage());
         }
     }
 

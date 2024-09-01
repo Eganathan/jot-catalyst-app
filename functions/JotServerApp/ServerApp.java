@@ -9,9 +9,9 @@ public class ServerApp {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    // Pre-compile patterns
+    // Route Pattern
     private static final Pattern JOT_BULK_PATTERN = Pattern.compile("/jots");
-    private static final Pattern JOT_SINGLE_PATTERN = Pattern.compile("^/jots/\\d{15}$");
+    private static final Pattern JOT_SINGLE_PATTERN = Pattern.compile("^/jots/\\d{17}$");
     private static final Pattern TESTING_PATTERN = Pattern.compile("/testing");
 
     private Map<Pattern, Runner> routesMap;
