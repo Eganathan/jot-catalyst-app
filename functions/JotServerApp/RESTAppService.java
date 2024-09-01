@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-public class ServerApp {
+
+public class RESTAppService {
 
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -16,7 +17,7 @@ public class ServerApp {
 
     private Map<Pattern, Runner> routesMap;
 
-    public ServerApp(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public RESTAppService(HttpServletRequest request, HttpServletResponse response) throws Exception {
         this.request = request;
         this.response = response;
 
