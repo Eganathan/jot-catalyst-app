@@ -1,202 +1,170 @@
-/* General Styles */
 body {
-  font-family: 'Arial', sans-serif; /* Choose a modern font */
-  min-height: 100vh;
-  background-color: #f4f4f4; /* Light gray background */
-  margin: 0;
-  display: flex;
-  flex-direction: column; /* Arrange elements vertically */
-  align-items: center; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
 }
-
-/* Topbar Styles */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  width: 100%;
-  background-color: #333; /* Dark background for contrast */
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.topbar h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.topbar nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.topbar nav li {
-  margin-left: 30px;
-}
-
-.topbar nav a {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s; /* Smooth color transition on hover */
-}
-
-.topbar nav a:hover {
-  color: #ddd; /* Lighter color on hover */
-}
-
-.topbar #logoutButton {
-  padding: 8px 15px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s; /* Smooth background transition on hover */
-}
-
-.topbar #logoutButton:hover {
-  background-color: #c82333; /* Darker red on hover */
-}
-
-/* Container Styles */
 .container {
-  margin-top: 80px; /* Adjust as needed */
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-width: 600px; /* Adjust for your desired width */
-  width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.creation-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+.creation-card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+.creation-card input, .creation-card textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+.creation-card input:focus, .creation-card textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+.creation-card textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.creation-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+.creation-card button:hover {
+    background-color: #45a049;
 }
 
-.container h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+.item-list {
+display: grid;
+gap: 20px;
+grid-template-columns: 1fr; 
+}
+.item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    padding-bottom: 25px;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+.item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.item h3 {
+    margin-top: 0;
+    color: #333;
+}
+.item-actions {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+.item:hover .item-actions {
+    display: block;
 }
 
-.input-group {
-  margin-bottom: 20px;
+.item-actions button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
+.item-actions button:hover {
+    background-color: #e0e0e0;
 }
-
-input[type="text"], textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 16px;
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
 }
-
-textarea {
-  height: 120px;
-  resize: vertical;
+.tag {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 20px;
+    font-size: 12px;
 }
-
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 16px;
-  transition: background-color 0.3s;
+.add-tag {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: center;
+    transition: background-color 0.3s ease;
 }
-
-button:hover {
-  background-color: #0056b3;
+.add-tag:hover {
+    background-color: #45a049;
+}
+.loading, .error {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+}
+.loading {
+    color: #4CAF50;
+}
+.error {
+    color: #d9534f;
+}
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+.toast {
+    background-color: #333;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.toast.show {
+    opacity: 1;
+}
+.toast.error {
+    background-color: #d9534f;
+}
+.toast.success {
+    background-color: #5cb85c;
 }
 
 button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
- #jot-description {height: 3rem; /* Set an initial smaller height */
-  transition: height 0.3s ease; /* Add a smooth transition for height change */
-}
-
-
-/* Jot Display Styles */
-#jotDisplay {
-  margin-top: 40px;
-  width: 90%;
-  max-width: 600px;
-}
-
-#jotDisplay h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-#jotList {
-  padding: 0;
-}
-
-#jotList li {
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin-bottom: 15px;
-  list-style: none;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-#jotList h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-#jotList p {
-  margin: 5px 0;
-}
-
-#errorContainer {
-  display: none;
-  color: red;
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Media Queries for Responsiveness (adjust breakpoints as needed) */
-@media (max-width: 768px) {
-  .container, #jotDisplay {
-    max-width: 95%;
-  }
-}
-
-.jot-item .jot-tags {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  justify-content: space-around;
-}
-
-.jot-actions{
-  grid-template-columns: repeat(auto-fill, 1fr);
- }
-
-.jot-actions button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline;
+background-color: #ccc; /* Disabled background color */
+color: #777; /* Disabled text color */
+cursor: not-allowed; /* Disabled cursor */
 }
