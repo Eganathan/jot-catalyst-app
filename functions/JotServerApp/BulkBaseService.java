@@ -1,7 +1,5 @@
 import org.json.simple.JSONObject;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 
 abstract class BulkBaseService<T> extends BaseService<T> {
