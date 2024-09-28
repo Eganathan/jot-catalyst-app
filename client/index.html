@@ -6,10 +6,12 @@
     <title>JotterSpace|Entry</title>
     <script src="https://static.zohocdn.com/catalyst/sdk/js/4.0.0/catalystWebSDK.js"></script>
     <script src="/__catalyst/sdk/init.js"></script>
-    <script> catalyst.auth.signIn("“login”");</script>
+    <script>
+          window.location.href = "https://jot-778776887.development.catalystserverless.com/__catalyst/auth/login"
+    </script>
+    <!-- <script>catalyst.auth.signIn("login"); -->
 </head>
-<body>
-    <div style="height: max-content;" id=“login”></div>
-
+<body style="width: 100%; height:100%; background-color: blanchedalmond;" >
+    <div id="login" style="height: 100vh; width: 100vw; background-color: blanchedalmond;"></div>
 </body>
 </html>
