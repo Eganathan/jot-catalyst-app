@@ -1,208 +1,206 @@
+// Developement
 const API_URL = 'https://jot-778776887.development.catalystserverless.com/server/JotServerApp/jots';
+const LOGIN_URL = "https://jot-778776887.development.catalystserverless.com/app/"
 
+// //User auth check
+// document.addEventListener('DOMContentLoaded', function() {
+//     var userManagement = catalyst.auth;
+//     var currentUserPromise = userManagement.isUserAuthenticated();
+//     currentUserPromise
+//     .then((response) => {
+//     console.log(response.content);
+//     fetchItems();})
+//     .catch((err) => {
+//     console.log(err);
+//     window.location.href = LOGIN_URL;
+//     });
+// });
 
-document.addEventListener('DOMContentLoaded', function() {
+const apiUrl = API_URL
 
-    var userManagement = catalyst.auth;
-    var currentUserPromise = userManagement.isUserAuthenticated();
-    currentUserPromise
-    .then((response) => {
-    console.log(response.content);
-    fetchItems();
-    jotCreationMeggaseValidation();
-    })
-    .catch((err) => {
-    console.log(err);
-    window.location.href = "https://jot-778776887.development.catalystserverless.com/app/";
-    });
-  });
+// Function to show toast notifications
+function showToast(message, type = 'success') {
+	const toastEl = document.createElement('div');
+	toastEl.classList.add('toast', `bg-${type}`, 'text-white', 'fade', 'show');
+	toastEl.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">${
+		type.charAt(0).toUpperCase() + type.slice(1)
+	}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">${message}</div>
+    `;
+	document.getElementById('toast-container').appendChild(toastEl);
+	setTimeout(() => {
+		toastEl.classList.remove('show');
+	}, 3000);
+}
 
+// Error handling
+function handleError(error) {
+	console.error("Error:", error);
+	showToast(error.message || "An error occurred", "danger");
+}
 
-        async function fetchItems() {
-    try {
-        const response = await fetch(API_URL + "?per_page=100&page=1");
-        if (!response.ok) {
-            throw new Error('Failed to fetch items');
-        }
-        
-        const networkResponse = await response.json(); // Parse the JSON response
-        const jots = networkResponse.data.jots; // Extract the 'jots' array
+async function getNotes() {
+	try {
+		showLoading(true); // Show loading indicator
+		const response = await fetch(apiUrl + "?page=1&per_page=100");
 
+		// Check if the response status is 200
+		if (response.status === 200) { // Only 200 is allowed
+			const result = await response.json(); // Parse JSON response
+			const notes = result.data.jots; // Get the notes from the response
+			renderNotes(notes); // Call renderNotes only if the response is 200
+		} else if (response.status === 204) {
+			showEmptyState(true); // Call a function to show a message for empty state
+		} else {
+			// Handle errors for other status codes (e.g., 404, 500)
+			throw new Error(`Failed to fetch notes! Status: ${response.status}`);
+		}
+	} catch (error) {
+		handleError(error); // Handle the error
+	} finally {
+		showLoading(false); // Hide loading indicator
+	}
+}
 
-        if (!Array.isArray(jots)) {
-            throw new Error('Invalid data format: jots is not an array');
-        }
+// Render notes in the UI
+function renderNotes(notes) {
+    console.log("data: "+notes)
+	const notesList = document.getElementById('notesList');
+	notesList.innerHTML = '';
 
-        renderItems(jots); // Pass the 'jots' array to renderItems
-    } catch (error) {
-        showToast('Failed to load items. Please try again later.', 'error');
-        document.getElementById('itemList').innerHTML =  error ;//'<div class="error">Failed to load items. Please try again later. $error</div>';
+	if (notes.length === 0) {
+		showEmptyState(true);
+	} else {
+		showEmptyState(false);
+		notes.forEach(note => {
+			const li = document.createElement('li');
+			li.classList.add('list-group-item', 'shadow-sm', 'mb-3');
+			li.innerHTML = `
+                <h5 class="text-primary">${
+				note.title
+			}</h5>
+                <p>${
+				note.note
+			}</p>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-warning btn-sm me-2" onclick="editNote('${
+				note.id
+			}')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteNote('${
+				note.id
+			}')">Delete</button>
+                </div>
+            `;
+			notesList.appendChild(li);
+		});
+	}
+}
+
+// Show or hide loading spinner
+function showLoading(isLoading) {
+    const loadingIndicator = document.getElementById("z_loader");
+    if (isLoading) {
+        loadingIndicator.style.opacity = 1; // Show the loading indicator
+    } else {
+        loadingIndicator.style.opacity = 0; // Hide the loading indicator
     }
 }
-        async function addItem() {
-            const messageInput = document.getElementById('messageInput');
-            const titleInput = document.getElementById('titleInput');
-            const message = messageInput.value.trim();
-            const title = titleInput.value.trim();
 
-            if (message) {
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ title, message, tags: [] }),
-                    });
+// Show or hide empty state
+function showEmptyState(isEmpty) {
+	document.getElementById('emptyState').classList.toggle('d-none', ! isEmpty);
+	document.getElementById('notesContainer').classList.toggle('d-none', isEmpty);
+}
 
-                    if (!response.ok) {
-                        throw new Error('Failed to add item');
-                    }
+// Add a new note (CREATE)
+async function addNote() {
+	const title = document.getElementById('noteTitle').value.trim();
+	const note = document.getElementById('noteDescription').value.trim();
 
-                    const newItem = await response.json();
-                    // items.push(newItem);
-                    // renderItems();
-                    messageInput.value = '';
-                    titleInput.value = '';
-                    showToast('Jot added successfully!', 'success');
-                } catch (error) {
-                    showToast('Failed to add jot. Please try again.', 'error');
-                }
-            } else {
-                showToast('Please enter a message.', 'error');
-            }
+	if (title === '' || note === '') {
+		return showToast("Please enter both title and description", "warning");
+	}
+
+    const payload = {
+        jot: {
+            note: note,
+            title: title
         }
+    };
 
-        async function updateItem(id, updatedData) {
-            try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedData),
-                });
+	try {
+		const response = await fetch(apiUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+		if (! response.ok) 
+			throw new Error("Failed to add note");
+		
 
-                if (!response.ok) {
-                    throw new Error('Failed to update item');
-                }
+		showToast("Note added successfully");
+		document.getElementById('noteTitle').value = '';
+		document.getElementById('noteDescription').value = '';
+		getNotes(); // Refresh notes
+	} catch (error) {
+		handleError(error);
+	}
+}
 
-                const updatedItem = await response.json();
-                const index = items.findIndex(item => item.id === id);
-                if (index !== -1) {
-                    items[index] = updatedItem;
-                    // renderItems();
-                    showToast('Jot updated successfully!', 'success');
-                }
-            } catch (error) {
-                showToast('Failed to update jot. Please try again.', 'error');
-            }
-        }
+// Edit note (UPDATE)
+async function editNote(id) {
+	const newTitle = prompt("Enter new title for the note:");
+	const newDescription = prompt("Enter new description for the note:");
 
-        async function deleteItem(id) {
-            try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                });
+	if (! newTitle || ! newDescription) 
+		return;
+	
 
-                if (!response.ok) {
-                    throw new Error('Failed to delete item');
-                }
+	try {
+		const response = await fetch(`${apiUrl}/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(
+				{title: newTitle, description: newDescription}
+			)
+		});
+		if (! response.ok) 
+			throw new Error("Failed to update note");
+		
 
-                items = items.filter(item => item.id !== id);
-                // renderItems();
-                showToast('Jot deleted successfully!', 'success');
-            } catch (error) {
-                showToast('Failed to delete jot. Please try again.', 'error');
-            }
-        }
+		showToast("Note updated successfully");
+		getNotes(); // Refresh notes
+	} catch (error) {
+		handleError(error);
+	}
+}
 
-        function renderItems(jots) {
-            console.log(jots);
-            const itemList = document.getElementById('itemList');
-            itemList.innerHTML = '';
+// Delete note (DELETE)
+async function deleteNote(id) {
+	if (!confirm("Are you sure you want to delete this note?")) 
+		return;
+	
 
-            jots.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'item';
-                itemElement.innerHTML = `
-                    ${item.title ? `<h3>${item.title}</h3>` : ''}
-                    <p>${item.note}</p>
-                    <div class="item-actions">
-                        <button onclick="editItem(${item.id})">Edit</button>
-                        <button onclick="deleteItem(${item.id})">Delete</button>
-                        <button onclick="shareItem(${item.id})">Share</button>
-                    </div>
-                `;
-                itemList.appendChild(itemElement);
-            });
+	try {
+		const response = await fetch(`${apiUrl}/${id}`, {method: 'DELETE'});
+		if (! response.ok) 
+			throw new Error("Failed to delete note");
+		
 
-            //For tags
-            // <!-- <div class="tags">
-            //              ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-            //              <button class="add-tag" onclick="addTag(${item.id})">+</button>
-            //          </div>-->
-        }
+		showToast("Note deleted successfully");
+		getNotes(); // Refresh notes
+	} catch (error) {
+		handleError(error);
+	}
+}
 
-        function editItem(id) {
-            const item = items.find(item => item.id === id);
-            if (item) {
-                const newTitle = prompt('Edit title (leave empty to remove):', item.title);
-                const newMessage = prompt('Edit your message:', item.message);
-                if (newMessage !== null && newMessage.trim() !== '') {
-                    updateItem(id, { ...item, title: newTitle.trim(), message: newMessage.trim() });
-                } else {
-                    showToast('Message cannot be empty.', 'error');
-                }
-            }
-        }
-
-        function shareItem(id) {
-            showToast('Sharing functionality not implemented in this demo.', 'error');
-        }
-
-        async function addTag(id) {
-            const item = items.find(item => item.id === id);
-            if (item) {
-                const newTag = prompt('Enter a new tag:');
-                if (newTag && newTag.trim()) {
-                    const updatedTags = [...item.tags, newTag.trim()];
-                    await updateItem(id, { ...item, tags: updatedTags });
-                }
-            }
-        }
-
-        function showToast(message, type = 'error') {
-            const toastContainer = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toastContainer.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-
-
-        //ui
-        function jotCreationMeggaseValidation(){
-            const messageInput = document.getElementById('messageInput');
-            const createJotButton = document.getElementById('jot-create-button');
-
-// Add an event listener to the textarea to monitor input
-messageInput.addEventListener('input', function() {
-    if (messageInput.value.trim() !== '') {
-        createJotButton.disabled = false; // Enable the button
-    } else {
-        createJotButton.disabled = true; // Disable the button
-    }
-});
-        }
+// Initial fetch of notes
+document.addEventListener('DOMContentLoaded', getNotes);

@@ -1,170 +1,68 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #f0f4f8;
+    font-family: 'Arial', sans-serif;
+    padding: 0px;
 }
-.container {
-    max-width: 800px;
-    margin: 0 auto;
+
+.card {
+    border-radius: 15px;
 }
-h1 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 30px;
+
+textarea {
+    resize: none;
 }
-.creation-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
+
+#notesList li {
+    transition: transform 0.3s;
 }
-.creation-card:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+
+#notesList li:hover {
+    transform: scale(1.02);
+    cursor: pointer;
 }
-.creation-card input, .creation-card textarea {
+
+img {
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+}
+
+/* Start of Loading */
+.loader {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-}
-.creation-card input:focus, .creation-card textarea:focus {
-    outline: none;
-    border-color: #4CAF50;
-}
-.creation-card textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-.creation-card button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-.creation-card button:hover {
-    background-color: #45a049;
-}
-
-.item-list {
-display: grid;
-gap: 20px;
-grid-template-columns: 1fr; 
-}
-.item {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    padding-bottom: 25px;
+    height: 4.8px;
+    display: inline-block;
     position: relative;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
-}
-.item:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.item h3 {
-    margin-top: 0;
-    color: #333;
-}
-.item-actions {
-    display: none;
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .loader::after {
+    content: '';  
+    width: 96px;
+    height: 4.8px;
+    background: #3686fe;
+    border-radius: 5px;
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-}
-.item:hover .item-actions {
-    display: block;
-}
-
-.item-actions button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    margin-left: 5px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-.item-actions button:hover {
-    background-color: #e0e0e0;
-}
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-.tag {
-    background-color: #e0e0e0;
-    padding: 5px 10px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-.add-tag {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 25px;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-.add-tag:hover {
-    background-color: #45a049;
-}
-.loading, .error {
-    text-align: center;
-    padding: 20px;
-    font-size: 18px;
-}
-.loading {
-    color: #4CAF50;
-}
-.error {
-    color: #d9534f;
-}
-.toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-.toast {
-    background-color: #333;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 4px;
-    margin-top: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.toast.show {
-    opacity: 1;
-}
-.toast.error {
-    background-color: #d9534f;
-}
-.toast.success {
-    background-color: #5cb85c;
-}
-
-button:disabled {
-background-color: #ccc; /* Disabled background color */
-color: #777; /* Disabled text color */
-cursor: not-allowed; /* Disabled cursor */
-}
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    animation: hitZak 0.6s ease-in-out infinite alternate;
+  }
+  
+  @keyframes hitZak {
+    0% {
+      left: 0;
+      transform: translateX(-1%);
+    }
+    100% {
+      left: 100%;
+      transform: translateX(-99%);
+    }
+  }
+      
+  
+/* End of Spinner */
