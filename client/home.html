@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,32 +9,33 @@
     <script src="/__catalyst/sdk/init.js"></script>
     <script>
         var userManagement = catalyst.auth;
-var currentUserPromise = userManagement.isUserAuthenticated();
-currentUserPromise
-.then((response) => {
-console.log(response.content);
-})
-.catch((err) => {
-console.log(err);
-window.location.href = "https://jot-778776887.development.catalystserverless.com/app/";
-});
+        var currentUserPromise = userManagement.isUserAuthenticated();
+        currentUserPromise
+            .then((response) => {
+                console.log(response.content);
+            })
+            .catch((err) => {
+                console.log(err);
+                window.location.href = "https://jot-778776887.development.catalystserverless.com/app/";
+            });
     </script>
-    
+
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="main.js"></script>
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4 text-primary"><b>Jot</b>ter Space</h1>
 
         <!-- Toast Notifications -->
-        <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
-            <!-- Toasts will appear here -->
+        <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+            <!-- Toast messages will be appended here -->
         </div>
 
-           <!-- Loading-->
-     <span class="loader" id="z_loader"></span>
+        <!-- Loading-->
+        <span class="loader" id="z_loader"></span>
         <!-- Add Note Section -->
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
@@ -41,7 +43,8 @@ window.location.href = "https://jot-778776887.development.catalystserverless.com
                     <input type="text" id="noteTitle" class="form-control" placeholder="Note Title">
                 </div>
                 <div class="mb-3">
-                    <textarea id="noteDescription" class="form-control" rows="3" placeholder="Note Description"></textarea>
+                    <textarea id="noteDescription" class="form-control" rows="3"
+                        placeholder="Note Description"></textarea>
                 </div>
                 <button class="btn btn-primary" onclick="addNote()">Add Note</button>
             </div>
@@ -56,11 +59,36 @@ window.location.href = "https://jot-778776887.development.catalystserverless.com
 
         <!-- Empty State -->
         <div id="emptyState" class="text-center text-muted d-none">
-            <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid" width="200">
+            <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid"
+                width="200">
             <p class="mt-4">You have no notes yet. Start by adding one!</p>
         </div>
     </div>
 
+
+    <!-- Dialog for Editing Note -->
+    <div id="editDialog" class="dialog">
+        <div class="dialog-content">
+            <span class="close" onclick="closeDialog()">&times;</span>
+            <h2>Edit Note</h2>
+            <form id="editNoteForm" onsubmit="updateNote(); return false;">
+                <div class="form-group">
+                    <label for="dialog_noteTitle">Title:</label>
+                    <input type="text" id="dialog_noteTitle" class="form-control" placeholder="Enter note title" required>
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Content:</label>
+                    <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
+                </div>
+                <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
+            </form>
+        </div>
+    </div>
+    
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
