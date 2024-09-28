@@ -81,19 +81,11 @@ function renderNotes(notes) {
 			const li = document.createElement('li');
 			li.classList.add('list-group-item', 'shadow-sm', 'mb-3');
 			li.innerHTML = `
-                <h5 class="text-primary">${
-				note.title || 'Untitled'
-			}</h5>
-                <p>${
-				note.note
-			}</p>
+                <h5 class="text-primary">${note.title || 'Untitled'}</h5>
+                <p>${note.note}</p>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-warning btn-sm me-2" onclick="editNote('${
-				note.id
-			}')">Edit</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteNote('${
-				note.id
-			}')">Delete</button>
+                    <button class="btn btn-warning btn-sm me-2" onclick="event.stopPropagation(); editNote('${note.id}')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteNote('${note.id}')">Delete</button>
                 </div>
             `;
 
@@ -111,7 +103,7 @@ function renderNotes(notes) {
 function openEditDialog(note) {
 	const dialog = document.getElementById('editDialog');
 
-    console.log(note);
+	console.log(note);
 	// Fill in the form with the note's current values
 	document.getElementById('dialog_noteTitle').value = note.title;
 	document.getElementById('noteContent').value = note.note;
@@ -131,11 +123,7 @@ function openEditDialog(note) {
 		event.preventDefault();
 		// Prevent the form from submitting
 		// Here you would typically update the note and refresh the list
-        editNote(
-            note.id,
-            document.getElementById('dialog_noteTitle').value.trim(),
-            document.getElementById('noteContent').value.trim()
-         );
+		editNote(note.id, document.getElementById('dialog_noteTitle').value.trim(), document.getElementById('noteContent').value.trim());
 		console.log('Note updated:', {
 			title: document.getElementById('dialog_noteTitle').value,
 			content: document.getElementById('noteContent').value
@@ -208,10 +196,11 @@ async function addNote() {
 }
 
 // Edit note (UPDATE)
-async function editNote(id,newTitle,newNote) {
+async function editNote(id, newTitle, newNote) {
 	if (! newTitle || ! newNote) 
 		return;
 	
+
 	try {
 		const response = await fetch(`${apiUrl}/${id}`, {
 			method: 'PUT',
@@ -225,6 +214,7 @@ async function editNote(id,newTitle,newNote) {
 		if (! response.ok) 
 			throw new Error("Failed to update note");
 		
+
 		showToast("Note updated successfully");
 		getNotes(); // Refresh notes
 	} catch (error) {
@@ -233,18 +223,16 @@ async function editNote(id,newTitle,newNote) {
 }
 
 // Delete note (DELETE)
-async function deleteNote(id) { 
+async function deleteNote(id) {
 
 	if (!confirm("Are you sure you want to delete this note?")) 
 		return;
 	
+
 	try {
 		const response = await fetch(`${apiUrl}/${id}`, {method: 'DELETE'});
 		if (! response.ok) 
 			throw new Error("Failed to delete note");
-		
-
-
 		showToast("Note deleted successfully");
 		getNotes(); // Refresh notes
 	} catch (error) {
@@ -252,5 +240,67 @@ async function deleteNote(id) {
 	}
 }
 
-// Initial fetch of notes
-document.addEventListener('DOMContentLoaded', getNotes);
+
+function onAuthSuccess() { // setting the base template for the app
+	document.body.innerHTML = ` <div class="container mt-5">
+    <h1 class="text-center mb-4" id="jot_title"><b>Jot</b>ter Space</h1>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <!-- Toast messages will be appended here -->
+    </div>
+
+    <!-- Loading-->
+    <span class="loader" id="z_loader"></span>
+    <!-- Add Note Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="mb-3">
+                <input type="text" id="noteTitle" class="form-control" placeholder="Note Title">
+            </div>
+            <div class="mb-3">
+                <textarea id="noteDescription" class="form-control" rows="3"
+                    placeholder="Note Description"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="addNote()">Add Note</button>
+        </div>
+    </div>
+
+    <!-- Notes List -->
+    <div id="notesContainer" class="d-none">
+        <ul id="notesList" class="list-group">
+            <!-- Notes will be displayed here -->
+        </ul>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="text-center text-muted d-none">
+        <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid"
+            width="200">
+        <p class="mt-4">You have no notes yet. Start by adding one!</p>
+    </div>
+</div>
+
+
+<!-- Dialog for Editing Note -->
+<div id="editDialog" class="dialog">
+    <div class="dialog-content">
+        <span class="close" onclick="closeDialog()">&times;</span>
+        <h2>Edit Note</h2>
+        <form id="editNoteForm" onsubmit="updateNote(); return false;">
+            <div class="form-group">
+                <label for="dialog_noteTitle">Title:</label>
+                <input type="text" id="dialog_noteTitle" class="form-control" placeholder="Enter note title" required>
+            </div>
+            <div class="form-group">
+                <label for="noteContent">Content:</label>
+                <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
+            </div>
+            <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
+        </form>
+    </div>
+</div>
+`
+	// initial fetch for jots
+	getNotes();
+}
