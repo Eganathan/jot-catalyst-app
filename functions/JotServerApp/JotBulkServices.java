@@ -70,7 +70,7 @@ public class JotBulkServices extends BulkBaseService<JotBulkServices> {
 
             ArrayList<JSONObject> jotItems = new ArrayList<>();
             //need to add pager but will do it later ;)
-            ZCQL.getInstance().executeQuery(String.format("SELECT ROWID, title, message, CREATEDTIME, MODIFIEDTIME FROM notes")).forEach(
+            ZCQL.getInstance().executeQuery(String.format("SELECT ROWID, title, note, CREATEDTIME, MODIFIEDTIME FROM notes")).forEach(
                     row -> {
                         jotItems.add(new JSONObject() {
                             {
