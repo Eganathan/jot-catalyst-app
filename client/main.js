@@ -84,7 +84,7 @@ function renderNotes(notes) {
                 <h5 class="text-primary">${note.title || 'Untitled'}</h5>
                 <p>${note.note}</p>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-warning btn-sm me-2" onclick="event.stopPropagation(); editNote('${note.id}')">Edit</button>
+                    <button class="btn btn-warning btn-sm me-2" onclick="editNote('${note.id}')">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteNote('${note.id}')">Delete</button>
                 </div>
             `;
@@ -199,7 +199,13 @@ async function addNote() {
 async function editNote(id, newTitle, newNote) {
 	if (! newTitle || ! newNote) 
 		return;
-	
+
+	const payload = {
+		jot: {
+			title: newTitle,
+			note: newNote
+		}
+	};
 
 	try {
 		const response = await fetch(`${apiUrl}/${id}`, {
@@ -207,16 +213,13 @@ async function editNote(id, newTitle, newNote) {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(
-				{title: newTitle, note: newNote}
-			)
+			body: JSON.stringify(payload)
 		});
 		if (! response.ok) 
 			throw new Error("Failed to update note");
-		
 
+		getNotes();
 		showToast("Note updated successfully");
-		getNotes(); // Refresh notes
 	} catch (error) {
 		handleError(error);
 	}
@@ -242,7 +245,8 @@ async function deleteNote(id) {
 
 
 function onAuthSuccess() { // setting the base template for the app
-	document.body.innerHTML = ` <div class="container mt-5">
+	document.body.innerHTML = ` 
+	<div class="container mt-5">
     <h1 class="text-center mb-4" id="jot_title"><b>Jot</b>ter Space</h1>
 
     <!-- Toast Notifications -->
