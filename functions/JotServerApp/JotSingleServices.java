@@ -61,7 +61,7 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
                         {
                             put("id", jotItem.get("ROWID").toString());
                             put("title", jotItem.get("title").toString());
-                            put("note", jotItem.get("message").toString());
+                            put("note", jotItem.get("note").toString());
                             put("created_time", jotItem.get("CREATEDTIME").toString());
                             put("modified_time", jotItem.get("MODIFIEDTIME").toString());
                         }
@@ -90,7 +90,7 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
             ZCRowObject row = ZCRowObject.getInstance();
             row.set("ROWID", jotID);
             row.set("title", jot.get("title"));
-            row.set("message", jot.get("note"));
+            row.set("note", jot.get("note"));
 
             rows.add(row);
 
@@ -103,7 +103,7 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
                         {
                             put("id", jotItem.get("ROWID").toString());
                             put("title", jotItem.get("title").toString());
-                            put("note", jotItem.get("message").toString());
+                            put("note", jotItem.get("note").toString());
                             put("created_time", jotItem.get("CREATEDTIME").toString());
                             put("modified_time", jotItem.get("MODIFIEDTIME").toString());
                         }
