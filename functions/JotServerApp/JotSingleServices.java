@@ -43,7 +43,10 @@ public class JotSingleServices extends SingleBaseService<JotSingleServices> {
         }
     }
 
-
+    @Override
+    public void createAndProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        create(request,response).process();
+    }
 
     //Implementations
 

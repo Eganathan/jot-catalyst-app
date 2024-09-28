@@ -7,4 +7,7 @@ public interface Runner<T> {
     public T create(HttpServletRequest request, HttpServletResponse response);
 
     public void process() throws Exception;
+
+    public void createAndProcess (HttpServletRequest request, HttpServletResponse response) throws Exception;
+
 }

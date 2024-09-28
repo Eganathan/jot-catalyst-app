@@ -28,4 +28,9 @@ public class TestingServices implements Runner<TestingServices> {
         _response.setStatus(404);
         _response.getWriter().write(responseData.toString());
     }
+
+    @Override
+    public void createAndProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        create(request,response).process();
+    }
 }

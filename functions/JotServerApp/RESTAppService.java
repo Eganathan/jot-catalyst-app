@@ -16,11 +16,8 @@ public class RESTAppService {
     private static final Pattern JOT_SINGLE_PATTERN = Pattern.compile("^/jots/\\d{17}$");
     private static final Pattern TESTING_PATTERN = Pattern.compile("/testing");
 
-    private static Map<Pattern, Class<? extends Runner>> routesMap = new HashMap<>();
+    private static Map<Pattern, Class<? extends Runner>> routesMap = addRoutes();
 
-    static {
-        addRoutes();
-    }
 
     public RESTAppService(HttpServletRequest request, HttpServletResponse response) throws Exception {
         this.request = request;
@@ -28,11 +25,12 @@ public class RESTAppService {
         navigate(request,response);
     }
 
-    private static void addRoutes() {
+    private static Map<Pattern, Class<? extends Runner>> addRoutes() {
         routesMap = new HashMap<>();
         routesMap.put(JOT_BULK_PATTERN,  JotBulkServices.class);
         routesMap.put(JOT_SINGLE_PATTERN,  JotSingleServices.class);
         routesMap.put(TESTING_PATTERN,  TestingServices.class);
+        return routesMap;
     }
 
     private void navigate(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -45,7 +43,7 @@ public class RESTAppService {
                 //creating the instance for routing
                 //handle exceptions
                 var classDes = routesMap.get(pattern);
-                classDes.getDeclaredConstructor().newInstance().create(request,response);
+                classDes.getDeclaredConstructor().newInstance().createAndProcess(request,response);
                 matchFound = true;
                 break;
             }

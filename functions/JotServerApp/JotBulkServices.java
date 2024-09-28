@@ -40,6 +40,11 @@ public class JotBulkServices extends BulkBaseService<JotBulkServices> {
         }
     }
 
+    @Override
+    public void createAndProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        create(request,response).process();
+    }
+
     //Implementation
     private void getBulkJots() throws IOException {
         try {
@@ -72,7 +77,6 @@ public class JotBulkServices extends BulkBaseService<JotBulkServices> {
                     });
 
             JSONObject bulkResponseJson = bulkResponseGenerator("jots", jotItems, page, perPage, hasMore);
-
             initiateSuccessMessage(_response, 200, bulkResponseJson);
         } catch (Exception e) {
             initiateErrorMessage(_response, 500, "Unable to Fetch Jots", "Fetching Jot Failed (did you provide page and per_page as a query parameter) with an exception :" + e.getLocalizedMessage());
