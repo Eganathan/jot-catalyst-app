@@ -16,7 +16,63 @@ const LOGIN_URL = "https://jot-778776887.development.catalystserverless.com/app/
 //     });
 // });
 
-const apiUrl = API_URL
+const markdownStyles = {
+    "bold": {
+        "token": "*",
+        "tag": "strong"
+    },
+    "italic": {
+        "token": "_",
+        "tag": "em"
+    },
+    "underline": {
+        "token": "__",
+        "tag": "u"
+    },
+    "strikethrough": {
+        "token": "~",
+        "tag": "del"
+    },
+    "unorderedList": {
+        "token": "-",
+        "tag": "ul"
+    },
+    "inlineCode": {
+        "token": "```",
+        "tag": "code"
+    },
+    "blockQuote": {
+        "token": "|  ",
+        "tag": "blockquote"
+    }
+};
+
+function markdownToHtml(markdown) {
+    // Handle unordered lists and block quotes
+    const lines = markdown.split('\n');
+    let html = '';
+
+    lines.forEach(line => {
+        // Handle block quotes
+        if (line.startsWith(markdownStyles.blockQuote.token)) {
+            html += `<${markdownStyles.blockQuote.tag}>${line.slice(1).trim()}</${markdownStyles.blockQuote.tag}>\n`;
+        } else if (line.startsWith(markdownStyles.unorderedList.token)) {
+            html += `<${markdownStyles.unorderedList.tag}><li>${line.slice(1).trim()}</li></${markdownStyles.unorderedList.tag}>\n`;
+        } else {
+            // Handle other markdown styles
+            line = line
+                .replace(new RegExp(`\\${markdownStyles.inlineCode.token}([^${markdownStyles.inlineCode.token}]+)\\${markdownStyles.inlineCode.token}`, 'g'), `<${markdownStyles.inlineCode.tag}>$1</${markdownStyles.inlineCode.tag}>`) // Inline code
+                .replace(new RegExp(`\\${markdownStyles.underline.token}([^${markdownStyles.underline.token}]+)\\${markdownStyles.underline.token}`, 'g'), `<${markdownStyles.underline.tag}>$1</${markdownStyles.underline.tag}>`) // Underline
+                .replace(new RegExp(`\\${markdownStyles.bold.token}([^${markdownStyles.bold.token}]+)\\${markdownStyles.bold.token}`, 'g'), `<${markdownStyles.bold.tag}>$1</${markdownStyles.bold.tag}>`) // Bold
+                .replace(new RegExp(`\\${markdownStyles.italic.token}([^${markdownStyles.italic.token}]+)\\${markdownStyles.italic.token}`, 'g'), `<${markdownStyles.italic.tag}>$1</${markdownStyles.italic.tag}>`) // Italic
+                .replace(new RegExp(`\\${markdownStyles.strikethrough.token}([^${markdownStyles.strikethrough.token}]+)\\${markdownStyles.strikethrough.token}`, 'g'), `<${markdownStyles.strikethrough.tag}>$1</${markdownStyles.strikethrough.tag}>`); // Strikethrough
+            
+            html += line + '\n';
+        }
+    });
+
+    return html.trim();
+}
 
 // Function to show toast notifications
 function showToast(message, type = 'success') {
@@ -46,7 +102,7 @@ function handleError(error) {
 async function getNotes() {
 	try {
 		showLoading(true); // Show loading indicator
-		const response = await fetch(apiUrl + "?page=1&per_page=100");
+		const response = await fetch(API_URL + "?page=1&per_page=100");
 
 		// Check if the response status is 200
 		if (response.status === 200) { // Only 200 is allowed
@@ -81,8 +137,8 @@ function renderNotes(notes) {
 			const li = document.createElement('li');
 			li.classList.add('list-group-item', 'shadow-sm', 'mb-3');
 			li.innerHTML = `
-                <h5 class="text-primary">${note.title || 'Untitled'}</h5>
-                <p>${note.note}</p>
+                <h5 class="text-primary">${note.title|| 'Untitled'}</h5>
+                <p>${markdownToHtml(note.note)}</p>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-warning btn-sm me-2" onclick="editNote('${note.id}')">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteNote('${note.id}')">Delete</button>
@@ -174,7 +230,7 @@ async function addNote() {
 	};
 
 	try {
-		const response = await fetch(apiUrl, {
+		const response = await fetch(API_URL, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -208,7 +264,7 @@ async function editNote(id, newTitle, newNote) {
 	};
 
 	try {
-		const response = await fetch(`${apiUrl}/${id}`, {
+		const response = await fetch(`${API_URL}/${id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -233,7 +289,7 @@ async function deleteNote(id) {
 	
 
 	try {
-		const response = await fetch(`${apiUrl}/${id}`, {method: 'DELETE'});
+		const response = await fetch(`${API_URL}/${id}`, {method: 'DELETE'});
 		if (! response.ok) 
 			throw new Error("Failed to delete note");
 		showToast("Note deleted successfully");
@@ -243,68 +299,117 @@ async function deleteNote(id) {
 	}
 }
 
+function getAppTemplate() {
+    return `
+        <div class="container mt-5">
+            <h1 class="text-center mb-4" id="jot_title"><strong>Jot</strong>ter Space</h1>
 
-function onAuthSuccess() { // setting the base template for the app
-	document.body.innerHTML = ` 
-	<div class="container mt-5">
-    <h1 class="text-center mb-4" id="jot_title"><b>Jot</b>ter Space</h1>
-
-    <!-- Toast Notifications -->
-    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
-        <!-- Toast messages will be appended here -->
-    </div>
-
-    <!-- Loading-->
-    <span class="loader" id="z_loader"></span>
-    <!-- Add Note Section -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <div class="mb-3">
-                <input type="text" id="noteTitle" class="form-control" placeholder="Note Title">
+            <!-- Toast Notifications -->
+            <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+                <!-- Toast messages will be appended here -->
             </div>
-            <div class="mb-3">
-                <textarea id="noteDescription" class="form-control" rows="3"
-                    placeholder="Note Description"></textarea>
-            </div>
-            <button class="btn btn-primary" onclick="addNote()">Add Note</button>
+
+            <!-- Loading Indicator -->
+            <span class="loader" id="z_loader" aria-hidden="true"></span>
+
+            <!-- Add Note Section -->
+            ${getAddNoteSection()}
+
+            <!-- Notes List -->
+            ${getNotesListSection()}
+
+            <!-- Empty State -->
+            ${getEmptyStateSection()}
         </div>
-    </div>
 
-    <!-- Notes List -->
-    <div id="notesContainer" class="d-none">
-        <ul id="notesList" class="list-group">
-            <!-- Notes will be displayed here -->
-        </ul>
-    </div>
+        <!-- Dialog for Editing Note -->
+        ${getEditDialogTemplate()}
+    `;
+}
 
-    <!-- Empty State -->
-    <div id="emptyState" class="text-center text-muted d-none">
-        <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid"
-            width="200">
-        <p class="mt-4">You have no notes yet. Start by adding one!</p>
-    </div>
-</div>
-
-
-<!-- Dialog for Editing Note -->
-<div id="editDialog" class="dialog">
-    <div class="dialog-content">
-        <span class="close" onclick="closeDialog()">&times;</span>
-        <h2>Edit Note</h2>
-        <form id="editNoteForm" onsubmit="updateNote(); return false;">
-            <div class="form-group">
-                <label for="dialog_noteTitle">Title:</label>
-                <input type="text" id="dialog_noteTitle" class="form-control" placeholder="Enter note title" required>
+function getAddNoteSection() {
+    return `
+        <div class="add-jot-card mb-4 shadow-sm">
+            <div class="card-body">
+                <div class="mb-3">
+                    <input type="text" id="noteTitle" class="form-control" placeholder="Title" aria-label="Note Title" required>
+                </div>
+                <div class="mb-3">
+                    <textarea id="noteDescription" class="form-control" rows="3" placeholder="Jot or note ..." aria-label="Note Description" required></textarea>
+                </div>
+                <button class="btn btn-primary" id="addNoteBtn" disabled>Add Jot</button>
             </div>
-            <div class="form-group">
-                <label for="noteContent">Content:</label>
-                <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
+        </div>
+    `;
+}
+
+function getNotesListSection() {
+    return `
+        <div id="notesContainer" class="d-none">
+            <ul id="notesList" class="list-group">
+                <!-- Notes will be displayed here -->
+            </ul>
+        </div>
+    `;
+}
+
+function getEmptyStateSection() {
+    return `
+        <div id="emptyState" class="text-center text-muted d-none">
+            <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid" width="200" aria-hidden="true">
+            <p class="mt-4">You have no notes yet. Start by adding one!</p>
+        </div>
+    `;
+}
+
+function getEditDialogTemplate() {
+    return `
+        <div id="editDialog" class="dialog" role="dialog" aria-labelledby="editDialogTitle" aria-hidden="true">
+            <div class="dialog-content">
+                <span class="close" onclick="closeDialog()" aria-label="Close dialog">&times;</span>
+                <h2 id="editDialogTitle">Edit Note</h2>
+                <form id="editNoteForm" onsubmit="updateNote(); return false;">
+                    <div class="form-group">
+                        <label for="dialog_noteTitle">Title:</label>
+                        <input type="text" id="dialog_noteTitle" class="form-control" placeholder="Enter note title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="noteContent">Content:</label>
+                        <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
+                    </div>
+                    <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
+                </form>
             </div>
-            <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
-        </form>
-    </div>
-</div>
-`
-	// initial fetch for jots
-	getNotes();
+        </div>
+    `;
+}
+
+// Function to enable/disable the Add Note button based on input values
+function toggleAddNoteButton() {
+    const title = document.getElementById('noteTitle').value.trim();
+    const description = document.getElementById('noteDescription').value.trim();
+    const addNoteBtn = document.getElementById('addNoteBtn');
+
+    // Enable the button if either field has content
+    addNoteBtn.disabled = !(title || description);
+}
+
+function addingEvents(){
+	const noteTitleInput = document.getElementById('noteTitle');
+    const noteDescriptionTextarea = document.getElementById('noteDescription');
+
+    // Initial check to set button state
+    toggleAddNoteButton();
+
+    // Add event listeners for input changes
+    noteTitleInput.addEventListener('input', toggleAddNoteButton);
+    noteDescriptionTextarea.addEventListener('input', toggleAddNoteButton);
+
+    document.getElementById('addNoteBtn').addEventListener('click', addNote);
+}
+
+function onAuthSuccess() {
+    document.body.innerHTML = getAppTemplate();
+	addingEvents()
+    getNotes();
 }

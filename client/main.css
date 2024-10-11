@@ -1,11 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #3b82f6;
+    --secondary-color: #1e40af;
+    --background-color: #0f172a;
+    --text-color: #e2e8f0;
+    --accent-color: #60a5fa;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+}
+.add-jot-card{
+    padding: 15px;
+    background-color: rgb(30, 41, 59, 0.8);
+    border-radius: 10px;
+}
+
 body {
-    background-color: #f0f4f8;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(160deg, var(--background-color) 50%, #1c2331 100%) fixed;
     padding: 0px;
 }
 
-.card {
+.add-jot-section {
     border-radius: 15px;
+    background-color: rgb(30, 41, 59, 0.8);
+    color: var(--text-color);
 }
 
 textarea {
@@ -14,15 +35,33 @@ textarea {
 
 #notesList li {
     transition: transform 0.3s;
+    background: rgb(30, 41, 59, 0.8);
+    border: 1px solid var( --background-color);
+}
+
+#notesList li h5{
+   font-weight: 700;
+}
+
+#notesList li p {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
 }
 
 #notesList li:hover {
     transform: scale(1.02);
     cursor: pointer;
+    border: 1px solid var( --text-color);
 }
 
 img {
     opacity: 0.7;
+}
+
+.jot-item-card {
+    border-radius: 5px;
+    background: rgb(30, 41, 59, 0.8);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -78,7 +117,7 @@ img {
 }
 
 .dialog-content {
-    background-color: #fefefe; /* White background */
+    background-color: var(--background-color);
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px; /* Padding */
     border: 1px solid #888; /* Gray border */
@@ -87,6 +126,7 @@ img {
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
     animation: fadeIn 0.3s; /* Fade-in effect */
+    color: var(--text-color);
 }
 
 .close {
@@ -98,7 +138,7 @@ img {
 
 .close:hover,
 .close:focus {
-    color: black; /* Change color on hover */
+    color: var(--accent-color); /* Change color on hover */
     text-decoration: none; /* No underline */
     cursor: pointer; /* Pointer cursor */
 }
