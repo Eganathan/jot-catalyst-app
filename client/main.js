@@ -367,14 +367,12 @@ function getEditDialogTemplate() {
         <div id="editDialog" class="dialog" role="dialog" aria-labelledby="editDialogTitle" aria-hidden="true">
             <div class="dialog-content">
                 <span class="close" onclick="closeDialog()" aria-label="Close dialog">&times;</span>
-                <h2 id="editDialogTitle">Edit Note</h2>
+                <h2 id="editDialogTitle">Update Jot</h2>
                 <form id="editNoteForm" onsubmit="updateNote(); return false;">
                     <div class="form-group">
-                        <label for="dialog_noteTitle">Title:</label>
                         <input type="text" id="dialog_noteTitle" class="form-control" placeholder="Enter note title" required>
                     </div>
                     <div class="form-group">
-                        <label for="noteContent">Content:</label>
                         <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
                     </div>
                     <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
