@@ -337,7 +337,10 @@ function getAddNoteSection() {
                 <div class="mb-3">
                     <textarea id="noteDescription" class="form-control" rows="3" placeholder="Jot or note ..." aria-label="Note Description" required></textarea>
                 </div>
-                <button class="btn btn-primary" id="addNoteBtn" disabled>Add Jot</button>
+
+				<div class="d-grid">
+    <button class="btn btn-primary" id="addNoteBtn" type="button" disabled>Create Jot</button>
+</div>
             </div>
         </div>
     `;
@@ -356,8 +359,8 @@ function getNotesListSection() {
 function getEmptyStateSection() {
     return `
         <div id="emptyState" class="text-center text-muted d-none">
-            <img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid" width="200" aria-hidden="true">
-            <p class="mt-4">You have no notes yet. Start by adding one!</p>
+<!--<img src="https://cdn-icons-png.flaticon.com/128/8296/8296798.png" alt="No Notes" class="img-fluid" width="200" aria-hidden="true">-->
+            <p class="mt-4">You have no Jots yet. Start by adding one!</p>
         </div>
     `;
 }
@@ -366,7 +369,7 @@ function getEditDialogTemplate() {
     return `
         <div id="editDialog" class="dialog" role="dialog" aria-labelledby="editDialogTitle" aria-hidden="true">
             <div class="dialog-content">
-                <span class="close" onclick="closeDialog()" aria-label="Close dialog">&times;</span>
+				<button class="close btn"><img src="asset/ic_close.png" alt="close" id="btn-close-dialog" onclick="closeDialog()"></button>
                 <h2 id="editDialogTitle">Update Jot</h2>
                 <form id="editNoteForm" onsubmit="updateNote(); return false;">
                     <div class="form-group">
@@ -375,7 +378,10 @@ function getEditDialogTemplate() {
                     <div class="form-group">
                         <textarea id="noteContent" class="form-control" rows="5" placeholder="Enter note content" required></textarea>
                     </div>
-                    <button id="dialog-update-btn" type="submit" class="btn btn-primary">Update Note</button>
+					<div class="d-grid col-6">
+<button id="dialog-update-btn" type="submit" class="btn btn-primary" type="button">Update Note</button>
+</div>
+
                 </form>
             </div>
         </div>

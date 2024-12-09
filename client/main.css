@@ -56,7 +56,8 @@ textarea {
 #notesList li:hover {
     transform: scale(1.02);
     cursor: pointer;
-    border: 1px solid var( --text-color);
+    border: 1px solid var(--text-color);
+    box-shadow: 0 0 10px var(--accent-color);
 }
 
 #notesList li:hover  .note-options {
@@ -139,17 +140,14 @@ img {
 }
 
 .close {
-    color: #aaa; /* Dark gray */
+    border-radius: 25%;
     float: right; /* Float the close button to the right */
-    font-size: 28px; /* Font size */
-    font-weight: bold; /* Bold text */
 }
 
-.close:hover,
-.close:focus {
-    color: var(--accent-color); /* Change color on hover */
-    text-decoration: none; /* No underline */
-    cursor: pointer; /* Pointer cursor */
+.close:hover, .close:focus {
+    border-radius: 25%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .form-group {
@@ -185,6 +183,12 @@ img {
     cursor: pointer; /* Pointer cursor */
     font-size: 16px; /* Font size */
 }
+
+#btn-close-dialog{
+    width: 25px; 
+    height: 25px;
+}
+
 #btn-img-item-card{
     width: 20px; 
     height: 20px;
