@@ -47,32 +47,32 @@ const markdownStyles = {
     }
 };
 
-function markdownToHtml(markdown) {
-    // Handle unordered lists and block quotes
-    const lines = markdown.split('\n');
-    let html = '';
+// function markdownToHtml(markdown) {
+//     // Handle unordered lists and block quotes
+//     const lines = markdown.split('\n');
+//     let html = '';
 
-    lines.forEach(line => {
-        // Handle block quotes
-        if (line.startsWith(markdownStyles.blockQuote.token)) {
-            html += `<${markdownStyles.blockQuote.tag}>${line.slice(1).trim()}</${markdownStyles.blockQuote.tag}>\n`;
-        } else if (line.startsWith(markdownStyles.unorderedList.token)) {
-            html += `<${markdownStyles.unorderedList.tag}><li>${line.slice(1).trim()}</li></${markdownStyles.unorderedList.tag}>\n`;
-        } else {
-            // Handle other markdown styles
-            line = line
-                .replace(new RegExp(`\\${markdownStyles.inlineCode.token}([^${markdownStyles.inlineCode.token}]+)\\${markdownStyles.inlineCode.token}`, 'g'), `<${markdownStyles.inlineCode.tag}>$1</${markdownStyles.inlineCode.tag}>`) // Inline code
-                .replace(new RegExp(`\\${markdownStyles.underline.token}([^${markdownStyles.underline.token}]+)\\${markdownStyles.underline.token}`, 'g'), `<${markdownStyles.underline.tag}>$1</${markdownStyles.underline.tag}>`) // Underline
-                .replace(new RegExp(`\\${markdownStyles.bold.token}([^${markdownStyles.bold.token}]+)\\${markdownStyles.bold.token}`, 'g'), `<${markdownStyles.bold.tag}>$1</${markdownStyles.bold.tag}>`) // Bold
-                .replace(new RegExp(`\\${markdownStyles.italic.token}([^${markdownStyles.italic.token}]+)\\${markdownStyles.italic.token}`, 'g'), `<${markdownStyles.italic.tag}>$1</${markdownStyles.italic.tag}>`) // Italic
-                .replace(new RegExp(`\\${markdownStyles.strikethrough.token}([^${markdownStyles.strikethrough.token}]+)\\${markdownStyles.strikethrough.token}`, 'g'), `<${markdownStyles.strikethrough.tag}>$1</${markdownStyles.strikethrough.tag}>`); // Strikethrough
+//     lines.forEach(line => {
+//         // Handle block quotes
+//         if (line.startsWith(markdownStyles.blockQuote.token)) {
+//             html += `<${markdownStyles.blockQuote.tag}>${line.slice(1).trim()}</${markdownStyles.blockQuote.tag}>\n`;
+//         } else if (line.startsWith(markdownStyles.unorderedList.token)) {
+//             html += `<${markdownStyles.unorderedList.tag}><li>${line.slice(1).trim()}</li></${markdownStyles.unorderedList.tag}>\n`;
+//         } else {
+//             // Handle other markdown styles
+//             line = line
+//                 .replace(new RegExp(`\\${markdownStyles.inlineCode.token}([^${markdownStyles.inlineCode.token}]+)\\${markdownStyles.inlineCode.token}`, 'g'), `<${markdownStyles.inlineCode.tag}>$1</${markdownStyles.inlineCode.tag}>`) // Inline code
+//                 .replace(new RegExp(`\\${markdownStyles.underline.token}([^${markdownStyles.underline.token}]+)\\${markdownStyles.underline.token}`, 'g'), `<${markdownStyles.underline.tag}>$1</${markdownStyles.underline.tag}>`) // Underline
+//                 .replace(new RegExp(`\\${markdownStyles.bold.token}([^${markdownStyles.bold.token}]+)\\${markdownStyles.bold.token}`, 'g'), `<${markdownStyles.bold.tag}>$1</${markdownStyles.bold.tag}>`) // Bold
+//                 .replace(new RegExp(`\\${markdownStyles.italic.token}([^${markdownStyles.italic.token}]+)\\${markdownStyles.italic.token}`, 'g'), `<${markdownStyles.italic.tag}>$1</${markdownStyles.italic.tag}>`) // Italic
+//                 .replace(new RegExp(`\\${markdownStyles.strikethrough.token}([^${markdownStyles.strikethrough.token}]+)\\${markdownStyles.strikethrough.token}`, 'g'), `<${markdownStyles.strikethrough.tag}>$1</${markdownStyles.strikethrough.tag}>`); // Strikethrough
             
-            html += line + '\n';
-        }
-    });
+//             html += line + '\n';
+//         }
+//     });
 
-    return html.trim();
-}
+//     return html.trim();
+// }
 
 // Function to show toast notifications
 function showToast(message, type = 'success') {
@@ -138,10 +138,10 @@ function renderNotes(notes) {
 			li.classList.add('list-group-item', 'shadow-sm', 'mb-3');
 			li.innerHTML = `
                 <h5 class="text-primary">${note.title|| 'Untitled'}</h5>
-                <p>${markdownToHtml(note.note)}</p>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-warning btn-sm me-2" onclick="editNote('${note.id}')">Edit</button>
-                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteNote('${note.id}')">Delete</button>
+                <p>${note.note}</p>
+                <div class="d-flex justify-content-end note-options">
+                    <button class="btn btn-sm" onclick="editNote('${note.id}')"><img src="asset/ic_edit.png" alt="edit" id="btn-img-item-card"></button>
+                    <button class="btn btn-sm" onclick="event.stopPropagation(); deleteNote('${note.id}')"><img src="asset/ic_delete.png" alt="delete" id="btn-img-item-card"></button>
                 </div>
             `;
 

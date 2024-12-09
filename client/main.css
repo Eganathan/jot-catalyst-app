@@ -31,6 +31,7 @@ body {
 
 textarea {
     resize: none;
+    background-color: #f5f7f9;
 }
 
 #notesList li {
@@ -48,10 +49,18 @@ textarea {
     color: var(--text-color);
 }
 
+.note-options {
+    visibility: hidden;
+}
+
 #notesList li:hover {
     transform: scale(1.02);
     cursor: pointer;
     border: 1px solid var( --text-color);
+}
+
+#notesList li:hover  .note-options {
+    visibility: visible;
 }
 
 img {
@@ -176,9 +185,20 @@ img {
     cursor: pointer; /* Pointer cursor */
     font-size: 16px; /* Font size */
 }
+#btn-img-item-card{
+    width: 20px; 
+    height: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+    border-radius: 10%;
+}
+
+#btn-img-item-card:hover{
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
 
 .btn:hover {
     background-color: #0056b3; /* Darker blue on hover */
+    border: solid 1px whitesmoke; /* Darker border on hover */
 }
 
 @keyframes fadeIn {
@@ -192,6 +212,7 @@ img {
     background-size: 400% 400%; /* Increase the size for animation */
     animation: gradient 15s ease infinite;
     -webkit-background-clip: text; /* For text to be filled with the gradient */
+    background-clip: text; /* For compatibility */
     -webkit-text-fill-color: transparent; /* Make the text fill color transparent */
 }
 
