@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Collection Web App</title>
+  <!-- Bootstrap CSS for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px; /* Adds padding to the body for better spacing */
+    }
+    .collection {
+      margin-bottom: 30px; /* Adds spacing between collections */
+    }
+    .loading-bar {
+      display: none;
+      width: 100%;
+      height: 5px;
+      background-color: #007bff;
+      animation: loading 2s infinite;
+    }
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center mb-4">Link Collection Web App</h1>
+
+    <!-- Loading Bar -->
+    <div class="loading-bar" id="loadingBar"></div>
+
+    <!-- Snackbar for notifications -->
+    <div class="toast align-items-center text-white bg-primary border-0" id="snackbar" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; bottom: 20px; right: 20px; display: none;">
+      <div class="d-flex">
+        <div class="toast-body">Action completed successfully!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="closeSnackbar()" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <!-- Main container where collections will be rendered -->
+    <div id="app"></div>
+
+    <!-- Form to add new links -->
+    <div class="mt-4">
+      <h3>Add New Link</h3>
+      <form id="linkForm">
+        <div class="mb-3">
+          <label for="collectionName" class="form-label">Collection Name</label>
+          <input type="text" class="form-control" id="collectionName" required>
+        </div>
+        <div class="mb-3">
+          <label for="linkTitle" class="form-label">Link Title</label>
+          <input type="text" class="form-control" id="linkTitle" required>
+        </div>
+        <div class="mb-3">
+          <label for="linkUrl" class="form-label">Link URL</label>
+          <input type="url" class="form-control" id="linkUrl" required>
+        </div>
+        <div class="mb-3">
+          <label for="linkDescription" class="form-label">Description</label>
+          <textarea class="form-control" id="linkDescription" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Link</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      "collections": [
+        {
+          "id": 1,
+          "name": "Programming Resources",
+          "links": [
+            {
+              "id": 1,
+              "title": "MDN Web Docs",
+              "url": "https://developer.mozilla.org/",
+              "description": "Comprehensive resource for web developers."
+            },
+            {
+              "id": 2,
+              "title": "W3Schools",
+              "url": "https://www.w3schools.com/",
+              "description": "Tutorials for web development."
+            }
+          ]
+        }
+      ]
+    };
+
+    // Function to show loading bar
+    function showLoadingBar() {
+      document.getElementById('loadingBar').style.display = 'block';
+    }
+
+    // Function to hide loading bar
+    function hideLoadingBar() {
+      document.getElementById('loadingBar').style.display = 'none';
+    }
+
+    // Function to show snackbar notification
+    function showSnackbar(message) {
+      const snackbar = document.getElementById('snackbar');
+      snackbar.querySelector('.toast-body').textContent = message;
+      snackbar.style.display = 'block';
+    }
+
+    // Function to close snackbar
+    function closeSnackbar() {
+      document.getElementById('snackbar').style.display = 'none';
+    }
+
+    // Function to render collections
+    function renderApp() {
+      const app = document.getElementById('app');
+      app.innerHTML = ''; // Clear the app container before rendering
+
+      data.collections.forEach(collection => {
+        const collectionDiv = document.createElement('div');
+        collectionDiv.className = 'collection';
+
+        const title = document.createElement('h2');
+        title.textContent = collection.name;
+        collectionDiv.appendChild(title);
+
+        const linksList = document.createElement('ul');
+        linksList.className = 'list-group';
+
+        collection.links.forEach(link => {
+          const listItem = document.createElement('li');
+          listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+          const linkInfo = document.createElement('div');
+
+          const linkElement = document.createElement('a');
+          linkElement.href = link.url;
+          linkElement.target = '_blank';
+          linkElement.textContent = link.title;
+
+          const description = document.createElement('p');
+          description.textContent = link.description;
+          description.className = 'mb-0';
+
+          linkInfo.appendChild(linkElement);
+          linkInfo.appendChild(description);
+          listItem.appendChild(linkInfo);
+
+          const actions = document.createElement('div');
+
+          const editButton = document.createElement('button');
+          editButton.className = 'btn btn-warning btn-sm me-2';
+          editButton.textContent = 'Edit';
+          editButton.onclick = () => editLink(collection.id, link.id);
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'btn btn-danger btn-sm';
+          deleteButton.textContent = 'Delete';
+          deleteButton.onclick = () => deleteLink(collection.id, link.id);
+
+          actions.appendChild(editButton);
+          actions.appendChild(deleteButton);
+          listItem.appendChild(actions);
+
+          linksList.appendChild(listItem);
+        });
+
+        collectionDiv.appendChild(linksList);
+        app.appendChild(collectionDiv);
+      });
+    }
+
+    // Function to edit a link
+    function editLink(collectionId, linkId) {
+      const collection = data.collections.find(c => c.id === collectionId);
+      if (!collection) return;
+
+      const link = collection.links.find(l => l.id === linkId);
+      if (!link) return;
+
+      document.getElementById('collectionName').value = collection.name;
+      document.getElementById('linkTitle').value = link.title;
+      document.getElementById('linkUrl').value = link.url;
+      document.getElementById('linkDescription').value = link.description;
+
+      showSnackbar('Editing link. Make changes and submit.');
+    }
+
+    // Function to delete a link
+    function deleteLink(collectionId, linkId) {
+      const collection = data.collections.find(c => c.id === collectionId);
+      if (!collection) return;
+
+      collection.links = collection.links.filter(link => link.id !== linkId);
+      renderApp();
+      showSnackbar('Link deleted successfully!');
+    }
+
+    // Handle form submission to add or edit a link
+    document.getElementById('linkForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      showLoadingBar();
+
+      // Get form data
+      const collectionName = document.getElementById('collectionName').value;
+      const linkTitle = document.getElementById('linkTitle').value;
+      const linkUrl = document.getElementById('linkUrl').value;
+      const linkDescription = document.getElementById('linkDescription').value;
+
+      // Find the collection or create a new one
+      let collection = data.collections.find(c => c.name === collectionName);
+      if (!collection) {
+        collection = { id: data.collections.length + 1, name: collectionName, links: [] };
+        data.collections.push(collection);
+      }
+
+      // Check if link already exists
+      let link = collection.links.find(l => l.title === linkTitle);
+      if (link) {
+        // Update existing link
+        link.url = linkUrl;
+        link.description = linkDescription;
+        showSnackbar('Link updated successfully!');
+      } else {
+        // Add new link
+        collection.links.push({
+          id: collection.links.length + 1,
+          title: linkTitle,
+          url: linkUrl,
+          description: linkDescription
+        });
+        showSnackbar('Link added successfully!');
+      }
+
+      // Re-render the app and reset the form
+      renderApp();
+      this.reset();
+      hideLoadingBar();
+    });
+
+    // Initial render
+    renderApp();
+  </script>
+</body>
+</html>
