@@ -1,43 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Link Collection Web App</title>
-  <!-- Bootstrap CSS and Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Link Collection Web App (Dark Mode, Local-Only)</title>
+  
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Font Awesome Icons -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
+
   <style>
     :root {
-      --background-color: linear-gradient(135deg, #1e3a8a, #9333ea);
-      --header-color: #f8fafc;
-      --card-bg-color: #e2e8f0;
-      --card-hover-color: #cbd5e1;
-      --btn-primary-bg: #4f46e5;
-      --btn-primary-hover: #3730a3;
+      /* Dark theme color variables */
+      --primary-bg-color: #1f2937;
+      --secondary-bg-color: #374151;
+      --highlight-color: #1e40af;
+      --highlight-hover: #1d4ed8;
+      --text-color: #f9fafb;
+      --card-bg-color: #27303f;
+      --card-hover-color: #3b4252;
+      --btn-primary-bg: #2563eb;
+      --btn-primary-hover: #1d4ed8;
+      --danger-color: #dc2626;
+      --danger-hover: #b91c1c;
+      --border-radius: 8px;
+      --item-separator-color: #4b5563;
     }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      color: #1e293b;
-      background: var(--background-color);
-      background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite;
-    }
-
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text-color);
+      background-color: var(--primary-bg-color);
     }
 
     .header {
       margin-bottom: 20px;
       padding: 20px;
-      background: var(--header-color);
-      border-radius: 8px;
+      background: var(--secondary-bg-color);
+      border-radius: var(--border-radius);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -52,8 +61,8 @@
     .create-form {
       margin-bottom: 20px;
       padding: 20px;
-      background: var(--header-color);
-      border-radius: 8px;
+      background: var(--secondary-bg-color);
+      border-radius: var(--border-radius);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
@@ -61,7 +70,7 @@
       margin-bottom: 15px;
       padding: 15px;
       background-color: var(--card-bg-color);
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
@@ -83,9 +92,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--header-color);
+      background: var(--secondary-bg-color);
       padding: 20px;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       z-index: 1000;
     }
@@ -110,12 +119,100 @@
       background-color: var(--btn-primary-bg);
       border: none;
     }
-
     .btn-primary:hover {
       background-color: var(--btn-primary-hover);
     }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+    }
+
+    /* Thumbnail styling */
+    .thumbnail-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.5rem;
+    }
+
+    .thumbnail-wrapper img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+      border: 1px solid #ffffff30;
+    }
+
+    .link-info {
+      flex: 1;
+      position: relative;
+    }
+
+    .link-info a {
+      color: #93c5fd; /* Light blue link color */
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .link-info a:hover {
+      text-decoration: underline;
+    }
+
+    .link-info p {
+      margin: 0.2rem 0 0;
+      font-size: 0.9rem;
+      color: #d1d5db;
+    }
+
+    /* Hover actions for each link item */
+    .link-actions {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transform: translateY(-10%);
+    }
+    .list-group-item:hover .link-actions {
+      display: inline-block;
+    }
+
+    /* Subtle separator between list items */
+    .list-group-item {
+      border-bottom: 1px solid var(--item-separator-color);
+    }
+    .list-group-item:last-child {
+      border-bottom: none;
+    }
+    .list-group-item {
+      background-color: transparent;
+      border: none; 
+      margin: 0; 
+      padding: 10px 0;
+    }
+
+    /* Smaller screens adjustments */
+    @media(max-width: 576px) {
+      .thumbnail-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .thumbnail-wrapper img {
+        margin-bottom: 0.5rem;
+      }
+      .link-info a {
+        font-size: 1rem;
+      }
+      .link-actions {
+        position: static;
+        transform: none;
+        margin-top: 0.5rem;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container mt-3">
     <div class="header">
@@ -123,34 +220,59 @@
       <button class="btn btn-primary" onclick="toggleForm()">Add New</button>
     </div>
 
-    <div class="create-form" id="createForm">
-      <h3>Create or Edit Link</h3>
+    <div class="create-form" id="createForm" style="display: none;">
+      <h3 id="formTitle">Create or Edit Link</h3>
       <form id="linkForm">
+        <!-- Hidden field to track if we're editing a link -->
+        <input type="hidden" id="editLinkId" value="" />
+
         <div class="mb-3">
           <label for="collectionSelect" class="form-label">Choose Collection</label>
           <select class="form-select" id="collectionSelect">
             <option value="" selected>Choose an existing collection</option>
           </select>
-          <input type="text" class="form-control mt-2" id="newCollectionName" placeholder="Or create a new collection">
+          <input
+            type="text"
+            class="form-control mt-2"
+            id="newCollectionName"
+            placeholder="Or create a new collection"
+          />
         </div>
         <div class="mb-3">
           <label for="linkTitle" class="form-label">Link Title</label>
-          <input type="text" class="form-control" id="linkTitle" required>
+          <input
+            type="text"
+            class="form-control"
+            id="linkTitle"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="linkUrl" class="form-label">Link URL</label>
-          <input type="url" class="form-control" id="linkUrl" required>
+          <input
+            type="url"
+            class="form-control"
+            id="linkUrl"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="linkDescription" class="form-label">Description</label>
-          <textarea class="form-control" id="linkDescription" rows="3" required></textarea>
+          <textarea
+            class="form-control"
+            id="linkDescription"
+            rows="3"
+            required
+          ></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
       </form>
     </div>
 
+    <!-- Main content area -->
     <div id="app"></div>
 
+    <!-- Delete Confirmation Dialog -->
     <div class="dialog-overlay" id="dialogOverlay" onclick="closeDeleteDialog()"></div>
     <div class="delete-dialog" id="deleteDialog">
       <h4>Are you sure you want to delete this?</h4>
@@ -162,20 +284,57 @@
   </div>
 
   <script>
-    let collections = [];
-    let expandedCollectionId = null;
+    /**
+     * ========== LOCAL COLLECTIONS =============
+     * We'll store all data here (no external API calls).
+     */
+    let collections = [
+      {
+        id: Date.now(),  // Just so we have a unique ID
+        name: "Others",  // Our default collection
+        links: []
+      }
+    ];
+
     let deleteTarget = null;
 
+    // On first load, populate the UI
+    window.addEventListener('DOMContentLoaded', () => {
+      renderApp();
+      populateCollectionSelect();
+    });
+
+    // Toggles the form for creating/editing links
     function toggleForm() {
       const form = document.getElementById('createForm');
-      form.style.display = form.style.display === 'none' || !form.style.display ? 'block' : 'none';
+      form.style.display = (form.style.display === 'none' || !form.style.display)
+        ? 'block'
+        : 'none';
+
+      // If hiding the form, reset it
+      if (form.style.display === 'none') {
+        resetForm();
+      }
     }
 
+    // Clears form fields
+    function resetForm() {
+      document.getElementById('formTitle').textContent = 'Create or Edit Link';
+      document.getElementById('editLinkId').value = '';
+      document.getElementById('newCollectionName').value = '';
+      document.getElementById('collectionSelect').value = '';
+      document.getElementById('linkTitle').value = '';
+      document.getElementById('linkUrl').value = '';
+      document.getElementById('linkDescription').value = '';
+    }
+
+    // Populate the existing collections into the <select>
     function populateCollectionSelect() {
       const collectionSelect = document.getElementById('collectionSelect');
-      collectionSelect.innerHTML = '<option value="" selected>Choose an existing collection</option>';
+      collectionSelect.innerHTML =
+        '<option value="" selected>Choose an existing collection</option>';
 
-      collections.forEach(collection => {
+      collections.forEach((collection) => {
         const option = document.createElement('option');
         option.value = collection.id;
         option.textContent = collection.name;
@@ -183,7 +342,10 @@
       });
     }
 
-    function addOrEditLink(event) {
+    // Form submission event (create / edit link)
+    document.getElementById('linkForm').addEventListener('submit', addOrEditLink);
+
+    async function addOrEditLink(event) {
       event.preventDefault();
 
       const newCollectionName = document.getElementById('newCollectionName').value.trim();
@@ -191,35 +353,107 @@
       const linkTitle = document.getElementById('linkTitle').value.trim();
       const linkUrl = document.getElementById('linkUrl').value.trim();
       const linkDescription = document.getElementById('linkDescription').value.trim();
+      const editLinkId = document.getElementById('editLinkId').value;
 
+      // Create or get the chosen collection
       let collection;
+
       if (newCollectionName) {
+        // Create new collection
         collection = { id: Date.now(), name: newCollectionName, links: [] };
         collections.push(collection);
         populateCollectionSelect();
       } else if (selectedCollectionId) {
-        collection = collections.find(c => c.id === Number(selectedCollectionId));
+        collection = collections.find((c) => c.id === Number(selectedCollectionId));
       } else {
         alert('Please select or create a collection.');
         return;
       }
 
-      if (collection) {
-        collection.links.push({
+      // Attempt to fetch a thumbnail (CORS issues can happen, but let's try)
+      const thumbnailUrl = await fetchThumbnail(linkUrl);
+
+      if (editLinkId) {
+        // Edit an existing link
+        const [oldCollection, oldLinkIndex] = findLinkById(Number(editLinkId));
+        if (!oldCollection || oldLinkIndex === -1) {
+          alert("Can't find link to edit!");
+          return;
+        }
+        // If moved to a new collection, remove from the old one
+        if (oldCollection.id !== collection.id) {
+          const [linkToMove] = oldCollection.links.splice(oldLinkIndex, 1);
+          linkToMove.title = linkTitle;
+          linkToMove.url = linkUrl;
+          linkToMove.description = linkDescription;
+          // If we found a valid thumbnail, update it
+          if (thumbnailUrl) linkToMove.thumbnail = thumbnailUrl;
+          // Add to new collection
+          collection.links.push(linkToMove);
+        } else {
+          // If same collection, just update link data
+          oldCollection.links[oldLinkIndex].title = linkTitle;
+          oldCollection.links[oldLinkIndex].url = linkUrl;
+          oldCollection.links[oldLinkIndex].description = linkDescription;
+          if (thumbnailUrl) oldCollection.links[oldLinkIndex].thumbnail = thumbnailUrl;
+        }
+      } else {
+        // Create new link
+        const newLink = {
           id: Date.now(),
           title: linkTitle,
           url: linkUrl,
-          description: linkDescription
-        });
-        renderApp();
+          description: linkDescription,
+          thumbnail: thumbnailUrl,
+        };
+        collection.links.push(newLink);
       }
 
+      // Re-render
+      renderApp();
+      populateCollectionSelect();
+      toggleForm();  // hide form
       event.target.reset();
-      toggleForm();
     }
 
-    function openDeleteDialog(target) {
-      deleteTarget = target;
+    // Try to locate a link by ID across all collections
+    function findLinkById(linkId) {
+      for (const col of collections) {
+        const index = col.links.findIndex((link) => link.id === linkId);
+        if (index !== -1) {
+          return [col, index];
+        }
+      }
+      return [null, -1];
+    }
+
+    // Very naive thumbnail fetch attempt
+    async function fetchThumbnail(url) {
+      try {
+        const response = await fetch(url, { mode: 'cors' });
+        const text = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+
+        const ogImage = doc.querySelector('meta[property="og:image"]');
+        const twitterImage = doc.querySelector('meta[name="twitter:image"]');
+
+        if (ogImage && ogImage.getAttribute('content')) {
+          return ogImage.getAttribute('content');
+        } else if (twitterImage && twitterImage.getAttribute('content')) {
+          return twitterImage.getAttribute('content');
+        }
+        return '';
+      } catch (err) {
+        console.warn('Thumbnail fetch blocked by CORS or invalid URL:', err);
+        return '';
+      }
+    }
+
+    // Delete dialog handlers
+    function openDeleteDialog(targetObj) {
+      deleteTarget = targetObj;
       document.getElementById('dialogOverlay').style.display = 'block';
       document.getElementById('deleteDialog').style.display = 'block';
     }
@@ -231,41 +465,110 @@
     }
 
     function confirmDelete() {
-      if (deleteTarget) {
-        deleteTarget.remove();
-        closeDeleteDialog();
-        alert('Deleted Successfully!');
+      if (!deleteTarget) return;
+
+      if (deleteTarget.type === 'collection') {
+        // Remove entire collection
+        collections = collections.filter((c) => c.id !== deleteTarget.data.id);
+      } else if (deleteTarget.type === 'link') {
+        // Remove single link
+        const [col, idx] = findLinkById(deleteTarget.data.id);
+        if (col && idx > -1) {
+          col.links.splice(idx, 1);
+        }
       }
+
+      closeDeleteDialog();
+      renderApp();
+      alert('Deleted Successfully!');
     }
 
+    // Render all collections & links to the page
     function renderApp() {
       const app = document.getElementById('app');
-      app.innerHTML = ''; // Clear container
-      collections.forEach(collection => {
+      app.innerHTML = ''; // Clear
+
+      collections.forEach((collection) => {
         const collectionDiv = document.createElement('div');
         collectionDiv.className = 'collection';
+
+        const linkItems = collection.links
+          .map((link) => {
+            const safeThumbnail = link.thumbnail
+              ? `<img src="${link.thumbnail}" alt="thumbnail" onerror="this.style.display='none';" />`
+              : `<img src="" alt="No thumbnail" style="display:none;" />`;
+
+            return `
+              <li class="list-group-item">
+                <div class="thumbnail-wrapper">
+                  ${safeThumbnail}
+                  <div class="link-info">
+                    <a href="${link.url}" target="_blank">${link.title}</a>
+                    <p>${link.description}</p>
+
+                    <div class="link-actions">
+                      <button 
+                        class="btn btn-sm btn-secondary me-1" 
+                        onclick="editLink(${link.id})"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-danger" 
+                        onclick="openDeleteDialog({ type: 'link', data: { id: ${link.id} } })"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            `;
+          })
+          .join('');
+
         collectionDiv.innerHTML = `
           <div class="collection-header">
             <span>${collection.name}</span>
-            <button class="btn btn-primary btn-sm" onclick="openDeleteDialog(this)"><i class="fas fa-trash-alt"></i></button>
+            <button 
+              class="btn btn-danger btn-sm"
+              onclick="openDeleteDialog({ type: 'collection', data: { id: ${collection.id} } })"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </div>
-          <ul class="list-group">
-            ${collection.links.map(link => `
-              <li class="list-group-item">
-                <a href="${link.url}" target="_blank">${link.title}</a>
-                <p>${link.description}</p>
-              </li>
-            `).join('')}
+          <ul class="list-group" style="margin-top: 10px;">
+            ${linkItems}
           </ul>
         `;
+
         app.appendChild(collectionDiv);
       });
     }
 
-    document.getElementById('linkForm').addEventListener('submit', addOrEditLink);
+    // Edit an existing link
+    function editLink(linkId) {
+      const form = document.getElementById('createForm');
+      if (form.style.display === 'none' || !form.style.display) {
+        toggleForm();
+      }
 
-    renderApp();
-    populateCollectionSelect();
+      const [foundCollection, foundLinkIndex] = findLinkById(linkId);
+      if (!foundCollection || foundLinkIndex === -1) return;
+
+      const linkData = foundCollection.links[foundLinkIndex];
+      document.getElementById('formTitle').textContent = 'Edit Link';
+      document.getElementById('editLinkId').value = linkData.id;
+
+      // Select the existing collection
+      document.getElementById('collectionSelect').value = foundCollection.id;
+      // Clear any new collection name
+      document.getElementById('newCollectionName').value = '';
+
+      document.getElementById('linkTitle').value = linkData.title;
+      document.getElementById('linkUrl').value = linkData.url;
+      document.getElementById('linkDescription').value = linkData.description;
+    }
   </script>
 </body>
 </html>
