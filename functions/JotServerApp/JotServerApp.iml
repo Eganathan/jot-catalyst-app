@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/lib/catalyst-function-sdk-1.0.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/catalyst-java-sdk-1.15.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/commons-logging-1.0.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/gradle-wrapper.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/jackson-annotations-2.7.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/jackson-core-2.7.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/jackson-databind-2.7.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/json-simple-1.1.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/json.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/okhttp-3.9.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/okio-1.13.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/org.json.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/servlet-api-3.1.jar!/" />
+    <src_description expected_position="13">
+      <src_folder value="file://$MODULE_DIR$" expected_position="13" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/.output" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <orderEntry type="module-library">
+      <library name="catalyst-function-sdk-1.0.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/catalyst-function-sdk-1.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="catalyst-java-sdk-1.15.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/catalyst-java-sdk-1.15.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-logging-1.0.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/commons-logging-1.0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="gradle-wrapper.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/gradle-wrapper.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-annotations-2.7.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jackson-annotations-2.7.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-core-2.7.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jackson-core-2.7.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jackson-databind-2.7.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jackson-databind-2.7.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="json-simple-1.1.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/json-simple-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="json.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/json.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="okhttp-3.9.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/okhttp-3.9.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="okio-1.13.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/okio-1.13.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="org.json.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/org.json.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="servlet-api-3.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/servlet-api-3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+  </component>
+</module>
