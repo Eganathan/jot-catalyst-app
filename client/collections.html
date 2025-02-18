@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Link Collection Web App (Dark Mode, Local-Only)</title>
+  <title>Jot | Collections</title>
   
   <!-- Bootstrap CSS -->
   <link
@@ -32,6 +32,7 @@
       --danger-hover: #b91c1c;
       --border-radius: 8px;
       --item-separator-color: #4b5563;
+      --semi-transparent-text: #9ca3af; /* A shade of gray */
     }
 
     body {
@@ -166,6 +167,19 @@
       color: #d1d5db;
     }
 
+    /* Semi-transparent, single-line URL */
+    .link-url {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--semi-transparent-text);
+      opacity: 0.7;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 300px; /* Adjust as needed */
+      margin-top: 2px;
+    }
+
     /* Hover actions for each link item */
     .link-actions {
       display: none;
@@ -209,6 +223,9 @@
         transform: none;
         margin-top: 0.5rem;
       }
+      .link-url {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -216,7 +233,7 @@
 <body>
   <div class="container mt-3">
     <div class="header">
-      <h1>Link Collection</h1>
+      <h1>Jot Collections</h1>
       <button class="btn btn-primary" onclick="toggleForm()">Add New</button>
     </div>
 
@@ -285,24 +302,63 @@
 
   <script>
     /**
-     * ========== LOCAL COLLECTIONS =============
-     * We'll store all data here (no external API calls).
+     * ========== LOCAL COLLECTIONS STORED IN localStorage ==========
+     * We'll keep a local array in memory, but read/save it from/to localStorage.
      */
-    let collections = [
-      {
-        id: Date.now(),  // Just so we have a unique ID
-        name: "Others",  // Our default collection
-        links: []
-      }
-    ];
 
-    let deleteTarget = null;
+    let collections = [];     // in-memory reference
+    let deleteTarget = null;  // store which item (collection or link) we're deleting
 
-    // On first load, populate the UI
+    // Key used in localStorage
+    const LOCAL_STORAGE_KEY = 'linkCollectionsData';
+
+    // On first load, read localStorage or create a default
     window.addEventListener('DOMContentLoaded', () => {
-      renderApp();
-      populateCollectionSelect();
+      try {
+        loadFromLocalStorage();
+        // If nothing in localStorage, create the "Others" collection
+        if (!collections || collections.length === 0) {
+          collections = [
+            {
+              id: Date.now(),
+              name: "Others",
+              links: []
+            }
+          ];
+          saveToLocalStorage();
+        }
+        renderApp();
+        populateCollectionSelect();
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        alert('An unexpected error occurred while loading. Please refresh.');
+      }
     });
+
+    /**
+     * ------------------- localStorage Helpers -------------------
+     */
+    function saveToLocalStorage() {
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(collections));
+      } catch (err) {
+        console.error('Failed to save to localStorage:', err);
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedData) {
+          collections = JSON.parse(storedData);
+        } else {
+          collections = [];
+        }
+      } catch (err) {
+        console.error('Failed to load from localStorage:', err);
+        collections = [];
+      }
+    }
 
     // Toggles the form for creating/editing links
     function toggleForm() {
@@ -343,11 +399,17 @@
     }
 
     // Form submission event (create / edit link)
-    document.getElementById('linkForm').addEventListener('submit', addOrEditLink);
-
-    async function addOrEditLink(event) {
+    document.getElementById('linkForm').addEventListener('submit', (event) => {
       event.preventDefault();
+      try {
+        addOrEditLink();
+      } catch (error) {
+        console.error('Error handling form submission:', error);
+        alert('Could not save link due to an unexpected error. Please try again.');
+      }
+    });
 
+    async function addOrEditLink() {
       const newCollectionName = document.getElementById('newCollectionName').value.trim();
       const selectedCollectionId = document.getElementById('collectionSelect').value;
       const linkTitle = document.getElementById('linkTitle').value.trim();
@@ -355,14 +417,17 @@
       const linkDescription = document.getElementById('linkDescription').value.trim();
       const editLinkId = document.getElementById('editLinkId').value;
 
-      // Create or get the chosen collection
-      let collection;
+      // Basic validation
+      if (!linkTitle || !linkUrl) {
+        alert('Please fill in both the Link Title and Link URL.');
+        return;
+      }
 
+      let collection;
       if (newCollectionName) {
         // Create new collection
         collection = { id: Date.now(), name: newCollectionName, links: [] };
         collections.push(collection);
-        populateCollectionSelect();
       } else if (selectedCollectionId) {
         collection = collections.find((c) => c.id === Number(selectedCollectionId));
       } else {
@@ -370,8 +435,8 @@
         return;
       }
 
-      // Attempt to fetch a thumbnail (CORS issues can happen, but let's try)
-      const thumbnailUrl = await fetchThumbnail(linkUrl);
+      // Attempt naive thumbnail fetch
+      const thumbnailUrl = await tryFetchThumbnail(linkUrl);
 
       if (editLinkId) {
         // Edit an existing link
@@ -380,15 +445,14 @@
           alert("Can't find link to edit!");
           return;
         }
+
         // If moved to a new collection, remove from the old one
         if (oldCollection.id !== collection.id) {
           const [linkToMove] = oldCollection.links.splice(oldLinkIndex, 1);
           linkToMove.title = linkTitle;
           linkToMove.url = linkUrl;
           linkToMove.description = linkDescription;
-          // If we found a valid thumbnail, update it
           if (thumbnailUrl) linkToMove.thumbnail = thumbnailUrl;
-          // Add to new collection
           collection.links.push(linkToMove);
         } else {
           // If same collection, just update link data
@@ -409,26 +473,15 @@
         collection.links.push(newLink);
       }
 
-      // Re-render
-      renderApp();
+      saveToLocalStorage();  // persist changes
+      renderApp();           // update UI
       populateCollectionSelect();
-      toggleForm();  // hide form
-      event.target.reset();
+      toggleForm();          // hide form
+      document.getElementById('linkForm').reset();
     }
 
-    // Try to locate a link by ID across all collections
-    function findLinkById(linkId) {
-      for (const col of collections) {
-        const index = col.links.findIndex((link) => link.id === linkId);
-        if (index !== -1) {
-          return [col, index];
-        }
-      }
-      return [null, -1];
-    }
-
-    // Very naive thumbnail fetch attempt
-    async function fetchThumbnail(url) {
+    // Safely fetch thumbnail with basic error handling
+    async function tryFetchThumbnail(url) {
       try {
         const response = await fetch(url, { mode: 'cors' });
         const text = await response.text();
@@ -451,6 +504,17 @@
       }
     }
 
+    // Helper to locate a link by ID across all collections
+    function findLinkById(linkId) {
+      for (const col of collections) {
+        const index = col.links.findIndex((link) => link.id === linkId);
+        if (index !== -1) {
+          return [col, index];
+        }
+      }
+      return [null, -1];
+    }
+
     // Delete dialog handlers
     function openDeleteDialog(targetObj) {
       deleteTarget = targetObj;
@@ -466,27 +530,36 @@
 
     function confirmDelete() {
       if (!deleteTarget) return;
-
-      if (deleteTarget.type === 'collection') {
-        // Remove entire collection
-        collections = collections.filter((c) => c.id !== deleteTarget.data.id);
-      } else if (deleteTarget.type === 'link') {
-        // Remove single link
-        const [col, idx] = findLinkById(deleteTarget.data.id);
-        if (col && idx > -1) {
-          col.links.splice(idx, 1);
+      try {
+        if (deleteTarget.type === 'collection') {
+          // Remove entire collection
+          collections = collections.filter((c) => c.id !== deleteTarget.data.id);
+        } else if (deleteTarget.type === 'link') {
+          // Remove single link
+          const [col, idx] = findLinkById(deleteTarget.data.id);
+          if (col && idx > -1) {
+            col.links.splice(idx, 1);
+          }
         }
+        saveToLocalStorage(); // persist changes
+        renderApp();
+        closeDeleteDialog();
+        alert('Deleted Successfully!');
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        alert('An unexpected error occurred while deleting. Please try again.');
       }
-
-      closeDeleteDialog();
-      renderApp();
-      alert('Deleted Successfully!');
     }
 
     // Render all collections & links to the page
     function renderApp() {
       const app = document.getElementById('app');
-      app.innerHTML = ''; // Clear
+      app.innerHTML = '';
+
+      // If no collections, just exit
+      if (!collections || collections.length === 0) {
+        return;
+      }
 
       collections.forEach((collection) => {
         const collectionDiv = document.createElement('div');
@@ -504,6 +577,7 @@
                   ${safeThumbnail}
                   <div class="link-info">
                     <a href="${link.url}" target="_blank">${link.title}</a>
+                    <span class="link-url">${link.url}</span>
                     <p>${link.description}</p>
 
                     <div class="link-actions">
@@ -554,7 +628,10 @@
       }
 
       const [foundCollection, foundLinkIndex] = findLinkById(linkId);
-      if (!foundCollection || foundLinkIndex === -1) return;
+      if (!foundCollection || foundLinkIndex === -1) {
+        alert('Could not find link to edit.');
+        return;
+      }
 
       const linkData = foundCollection.links[foundLinkIndex];
       document.getElementById('formTitle').textContent = 'Edit Link';
