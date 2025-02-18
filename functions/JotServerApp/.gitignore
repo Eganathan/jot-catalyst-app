@@ -1,3 +1,5 @@
 
 JotServerApp/.output/
 JotServerApp/.output/*.class
+.output/
+../
