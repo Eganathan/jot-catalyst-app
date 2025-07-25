@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="a50ef39d-a8e4-42c7-b7ee-0ed907796cb5" name="Changes" comment="" />
+    <list default="true" id="a50ef39d-a8e4-42c7-b7ee-0ed907796cb5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/functions.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/functions.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/.output/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/JotServerApp/.output/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/JotServerApp/.output/JotServerApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JotServerApp/JotBulkServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/JotServerApp/JotBulkServices.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2l4kGOwXtYAUKaQOLuXzA2P6vk3" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -18,6 +33,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/eganathan-14461/eknath/server/jot/functions"
   }
